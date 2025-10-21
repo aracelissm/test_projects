@@ -1,0 +1,279 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <div class="above-grid">
+        <div class="diagram-container-left">
+            <label>{{ labelText1 }}</label>
+            <app-truss-viewer [tag]="tag1" [isSmall]="true" [isSchematics]="true"></app-truss-viewer>
+        </div>
+        <div style="width:200px;">
+        </div>
+        <div class="diagram-container-right">
+            <label>{{ labelText2 }}</label>
+            <app-truss-viewer [tag]="tag2" [isSmall]="true" [isSchematics]="true"></app-truss-viewer>
+        </div>
+    </div>
+    <div class="assign-mark-container">
+        <div class="unmarked-grid datagrid-wrapper custom-datagrid-pager-exists">
+            <h3>Unmarked</h3>
+            <dx-data-grid #unmarkedDataGrid id="unmarkedDataGrid" [(selectedRowKeys)]="selectedUnmarkedKeys"
+                [dataSource]="dataSourceUnmarked" [showBorders]="true" [showRowLines]="true" noDataText="No Data Found"
+                keyExpr="recId" [allowColumnResizing]="true" (onSelectionChanged)="selectionChangedHandler($event)"
+                (onExporting)="onUnmarkedExporting($event)" (onEditorPreparing)="onEditorPreparing($event)"
+                (onRowClick)="onRowClickUnmarked($event)">
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true"
+                    [mode]="columnChooserModes[1].key">
+                    <dxo-position my="right top" at="right bottom"
+                        of=".dx-datagrid-column-chooser-button"></dxo-position>
+                </dxo-column-chooser>
+                <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+                <dxo-sorting mode="multiple"></dxo-sorting>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-search-panel [visible]="true" [width]="120" [text]="unmarkedSearchResult"
+                    placeholder="Search..."></dxo-search-panel>
+                <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadStateUnmarked"
+                    [customSave]="saveStateUnmarked"></dxo-state-storing>
+                <dxo-load-panel [enabled]="false"> </dxo-load-panel>
+                <dxo-toolbar>
+                    <dxi-item location="before">
+                        <dx-button text="Clear Selection" [disabled]="!selectedUnmarkedKeys.length"
+                            (onClick)="unmarkedDataGrid.instance.clearSelection()">
+                        </dx-button>
+                    </dxi-item>
+                    <dxi-item name="columnChooserButton"></dxi-item>
+                    <dxi-item name="exportButton"></dxi-item>
+                    <dxi-item>
+                        <div *dxTemplate>
+                            <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetStateUnmarked()">
+                            </dx-button>
+                        </div>
+                    </dxi-item>
+                    <dxi-item name="searchPanel"></dxi-item>
+                </dxo-toolbar>
+                <dxi-column type="selection" [fixed]="true"></dxi-column>
+                <dxi-column caption="Qty" dataField="jiQuant" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Truss" dataField="jiItemDesc" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Tag" dataField="jiTag" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Type" dataField="type" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Ply" dataField="jiNumPly" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Span" dataField="oaspan" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Height" dataField="oaheight" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Mark" dataField="jiMark" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Order" dataField="jiMarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Eng Mark" dataField="jiEmark" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Eng Order" dataField="jiEmarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Batch Mark" dataField="jiBmark" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Batch Order" dataField="jiBmarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Backplatable" dataField="validBackplatingDevices" alignment="left"
+                    [allowSorting]="true" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                    [filterOperations]="emptyFilterOperations" [allowReordering]="true" [editorOptions]="editorOptions"
+                    [calculateFilterExpression]="calculateFilterExpression" cellTemplate="bptemplate1">
+                    <div *dxTemplate="let data of 'bptemplate1'">
+                        <i *ngIf="data.value" title="Backplate eligible" class="icon dx-icon-box"></i>
+                    </div>
+
+                </dxi-column>
+                <dxo-selection mode="multiple" showCheckBoxesMode="always" selectAllMode="allPages"></dxo-selection>
+                <dxo-scrolling mode="standard" [renderAsync]="false"> </dxo-scrolling>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+            </dx-data-grid>
+        </div>
+        <div class="assign-mark-controls">
+            <div class="assign-mark-controls-column">
+                <div class="input-buttons">
+                    <button type="button" [disabled]="batchMarkForm.invalid || selectedUnmarkedKeys.length === 0"
+                        class="btn btn-primary m-2" (click)="onMarkBatch()">&gt;&gt;</button>
+                    <button type="button" [disabled]="selectedMarkedKeys.length === 0" class="btn btn-primary m-2"
+                        (click)="onUnmarkBatch()">&lt;&lt;</button>
+                    <button type="button" [disabled]="batchMarkForm.invalid || selectedMarkedKeys.length === 0"
+                        class="btn btn-primary m-2" (click)="onChangeBatchMark()">Change Mark</button>
+                </div>
+                <div class="input-control" [formGroup]="batchMarkForm">
+                    <label class="form-label">Mark
+                        <span appMarkAsterisk [formGroup]="batchMarkForm" [controlName]="'mark'"></span>
+                        <a *ngIf="lf['mark'].touched && lf['mark'].errors && lf['mark'].errors?.['required']"
+                            title="Mark is required">
+                            <img src="assets/images/validation-info.svg" class="icon20px">
+                        </a>
+                    </label>
+                    <input id="markInputId" oninput="this.value = this.value.toUpperCase()" maxlength="10"
+                        class="form-control" [ngClass]="{'req-border': lf['mark'].touched && lf['mark'].errors }"
+                        formControlName="mark" type="text" placeholder="Mark">
+                </div>
+            </div>
+        </div>
+        <div class="marked-grid datagrid-wrapper custom-datagrid-pager-exists">
+            <h3>Marked</h3>
+            <dx-data-grid #markedDataGrid id="markedDataGrid" [(selectedRowKeys)]="selectedMarkedKeys"
+                [dataSource]="dataSourceMarked" [showBorders]="true" [showRowLines]="true" noDataText="No Data Found"
+                keyExpr="recId" [allowColumnResizing]="true" (onSelectionChanged)="selectionChangedHandler2($event)"
+                (onEditorPreparing)="onEditorPreparing($event)" (onExporting)="onMarkedExporting($event)"
+                (onRowClick)="onRowClickMarked($event)">
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true"
+                    [mode]="columnChooserModes[1].key">
+                    <dxo-position my="right top" at="right bottom"
+                        of=".dx-datagrid-column-chooser-button"></dxo-position>
+                </dxo-column-chooser>
+                <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+                <dxo-sorting mode="multiple"></dxo-sorting>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-search-panel [visible]="true" [width]="120" [text]="markedSearchResult"
+                    placeholder="Search..."></dxo-search-panel>
+                <dxo-load-panel [enabled]="false"> </dxo-load-panel>
+                <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadStateMarked"
+                    [customSave]="saveStateMarked"></dxo-state-storing>
+                <dxo-toolbar>
+                    <dxi-item location="before">
+                        <dx-select-box [dataSource]="markedFilterOptions" [inputAttr]="{ 'aria-label': 'Mark' }"
+                            placeholder="Select Mark" [width]="70" [(value)]="filterValue"
+                            (onValueChanged)="filterSelected()">
+                        </dx-select-box>
+                    </dxi-item>
+                    <dxi-item location="before">
+                        <dx-button text="Clear Selection" [disabled]="!selectedMarkedKeys.length"
+                            (onClick)="markedDataGrid.instance.clearSelection()">
+                        </dx-button>
+                    </dxi-item>
+                    <dxi-item location="before">
+                        <dx-check-box id="autoExpand" [(value)]="expandAllGroups" text="Expand All">
+                        </dx-check-box>
+                    </dxi-item>
+                    <dxi-item name="columnChooserButton"></dxi-item>
+                    <dxi-item name="exportButton"></dxi-item>
+                    <dxi-item>
+                        <div *dxTemplate>
+                            <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetStateMarked()">
+                            </dx-button>
+                        </div>
+                    </dxi-item>
+                    <dxi-item name="searchPanel"></dxi-item>
+                </dxo-toolbar>
+                <dxi-column type="selection" [fixed]="true"></dxi-column>
+                <dxi-column caption="Id" dataField="recId" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Qty" dataField="jiQuant" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Truss" dataField="jiItemDesc" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Tag" dataField="jiTag" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Type" dataField="type" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Ply" dataField="jiNumPly" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Backplatable" dataField="validBackplatingDevices" alignment="left"
+                    [allowSorting]="true" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                    [filterOperations]="emptyFilterOperations" [calculateFilterExpression]="calculateFilterExpression"
+                    [allowReordering]="true" [editorOptions]="editorOptions" cellTemplate="bptemplate2">
+                    <div *dxTemplate="let data of 'bptemplate2'">
+                        <i *ngIf="data.value" title="Backplate eligible" class="icon dx-icon-box"></i>
+                    </div>
+                </dxi-column>
+                <dxi-column caption="Span" dataField="oaspan" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Height" dataField="oaheight" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Mark" dataField="jiMark" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Order" dataField="jiMarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Eng Mark" dataField="jiEmark" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Eng Order" dataField="jiEmarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Batch Mark" dataField="jiBmark" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Batch Mark" dataField="jiBmark" [groupIndex]="0" alignment="left"></dxi-column>
+                <dxi-column caption="Batch Order" dataField="jiBmarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxo-group-panel [visible]="true" [allowColumnDragging]="false"></dxo-group-panel>
+                <dxo-grouping [autoExpandAll]="getCheckboxValue()"></dxo-grouping>
+                <dxo-summary [calculateCustomSummary]="calculateTotal">
+                    <dxi-group-item name="trussTotal" summaryType="custom" valueFormat="#,###"
+                        displayFormat="Total Truss: {0}">
+                    </dxi-group-item>
+                    <dxi-group-item name="designTotal" summaryType="custom" valueFormat="#,###"
+                        displayFormat="Total Design: {0}">
+                    </dxi-group-item>
+                </dxo-summary>
+                <dxo-selection mode="multiple" showCheckBoxesMode="always" selectAllMode="allPages"></dxo-selection>
+                <dxo-row-dragging *ngIf="markType === markTypeHtmlAcessor.BATCHING" [allowReordering]="true"
+                    [showDragIcons]="true" [onDragChange]="onDragChange" [onReorder]="onReorder">
+                </dxo-row-dragging>
+                <dxo-scrolling mode="standard" [renderAsync]="false"> </dxo-scrolling>
+                <dxo-paging [enabled]="false"></dxo-paging>
+                <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+            </dx-data-grid>
+        </div>
+    </div>
+    <div class="wizard-nav-buttons">
+        <button type="button" class="btn btn-primary m-2" (click)="previous()">{{currentStep.previousButtonText}}
+        </button>
+        <div>
+            <button type="button" class="btn btn-primary m-2" (click)="onActivateMark()">
+                <span *ngIf="markType === markTypeHtmlAcessor.BATCHING">Activate Batch Marks</span>
+                <span *ngIf="markType === markTypeHtmlAcessor.ENGINEERING">Activate Eng Marks</span>
+            </button>
+            <button type="button" *ngIf="!currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+                (click)="next()">{{currentStep.nextButtonText}}
+            </button>
+            <button type="button" *ngIf="currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+                (click)="completeBatching()">{{currentStep.nextButtonText}}
+            </button>
+        </div>
+    </div>
+        <dx-load-panel [position]="{ of: '#markedDataGrid' }" [visible]="markedGridLoadingPanelVisible" [showIndicator]="true"
+        [showPane]="true" [shading]="false" hideOnOutsideClick="false"></dx-load-panel>
+
+        <dx-load-panel [position]="{ of: '#unmarkedDataGrid' }" [visible]="unmarkedGridLoadingPanelVisible" [showIndicator]="true"
+        [showPane]="true" [shading]="false" hideOnOutsideClick="false"></dx-load-panel>
+</main>
+
+
+<!-- TEMPLATES -->
+<ng-template #filterRowEditor let-options="options">
+    <dx-switch [value]="options.value" (onValueChanged)="options.setValue($event.value)"></dx-switch>
+</ng-template>

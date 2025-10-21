@@ -1,0 +1,120 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <div class="lumber-grid datagrid-wrapper custom-datagrid-pager-exists">
+        <h2 class="title-v1 mb-1">Lumber</h2>
+        <dx-data-grid #lumberDataGrid [height]="dataGridHeight" [dataSource]="dataSourceLumber" [showBorders]="true"
+            [showRowLines]="true" noDataText="No Data Found" keyExpr="recId" [allowColumnResizing]="true"
+            (onExporting)="onLumberExporting($event)">
+            <dxo-export [enabled]="true"></dxo-export>
+        <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true" [mode]="columnChooserModes[1].key">
+            <dxo-position my="right top" at="right bottom" of=".dx-datagrid-column-chooser-button"></dxo-position>
+        </dxo-column-chooser>
+            <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+            <dxo-sorting mode="multiple"></dxo-sorting>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-search-panel [visible]="true" [width]="240" [text]="lumberSearchResult"
+                placeholder="Search..."></dxo-search-panel>
+            <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadStateLumber"
+                [customSave]="saveStateLumber"></dxo-state-storing>
+            <dxo-toolbar>
+                <dxi-item name="columnChooserButton"></dxi-item>
+        <dxi-item name="exportButton"></dxi-item>
+                <dxi-item>
+                    <div *dxTemplate>
+                        <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetStateLumber()">
+                        </dx-button>
+                    </div>
+                </dxi-item>
+                <dxi-item name="searchPanel"></dxi-item>
+            </dxo-toolbar>
+            <dxi-column caption="Job #" dataField="jobKey" alignment="left" [allowSorting]="true"
+                [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Size" dataField="sizeName" [allowSorting]="true" [allowFiltering]="true"
+                [allowHeaderFiltering]="false" [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Grade" dataField="gradeName" [allowSorting]="true" [allowFiltering]="true"
+                [allowHeaderFiltering]="false" [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Normal Length" dataField="nomLen" alignment="left" [allowSorting]="true"
+                [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Quantity" dataField="qty" alignment="left" format="#,##0" [allowSorting]="true"
+                [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Board Feet" dataField="bdFt" alignment="left" format="#,##0.00" [allowSorting]="true"
+                [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions"></dxi-column>
+
+            <dxo-scrolling mode="virtual" [renderAsync]="false"> </dxo-scrolling>
+            <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+            <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+        </dx-data-grid>
+        <div class="custom-datagrid-pager-wrapper" *ngIf="gridCount">
+            <app-single-select placeholder="Select Page Size" [clearable]="false" [trackByFn]="pageSizeTrackByFn"
+                [getOptionLabelFn]="getPageSizeOptionLabelFn" [options]="pageSizeOptions" (onSelect)="onSelectPageSize()"
+                [(ngModel)]="selectedPageSize">
+            </app-single-select>
+        </div>
+    </div>
+    <div class="plate-grid datagrid-wrapper custom-datagrid-pager-exists">
+        <h2 class="title-v1 mb-1">Plate</h2>
+        <dx-data-grid #plateDataGrid [height]="dataGridHeight" [dataSource]="dataSourcePlate" [showBorders]="true"
+            [showRowLines]="true" noDataText="No Data Found" keyExpr="recId" [allowColumnResizing]="true"
+            (onExporting)="onPlateExporting($event)">
+            <dxo-export [enabled]="true"></dxo-export>
+        <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true" [mode]="columnChooserModes[1].key">
+            <dxo-position my="right top" at="right bottom" of=".dx-datagrid-column-chooser-button"></dxo-position>
+        </dxo-column-chooser>
+            <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+            <dxo-sorting mode="multiple"></dxo-sorting>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-search-panel [visible]="true" [width]="240" [text]="plateSearchResult"
+                placeholder="Search..."></dxo-search-panel>
+            <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadStatePlate"
+                [customSave]="saveStatePlate"></dxo-state-storing>
+            <dxo-toolbar>
+                <dxi-item name="columnChooserButton"></dxi-item>
+        <dxi-item name="exportButton"></dxi-item>
+                <dxi-item>
+                    <div *dxTemplate>
+                        <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetStatePlate()">
+                        </dx-button>
+                    </div>
+                </dxi-item>
+                <dxi-item name="searchPanel"></dxi-item>
+            </dxo-toolbar>
+            <dxi-column caption="Job #" dataField="jobKey" alignment="left" [allowSorting]="true"
+                [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Name" dataField="name" alignment="left" [allowSorting]="true" [allowFiltering]="true"
+                [allowHeaderFiltering]="false" [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Type" dataField="type" alignment="left" [allowSorting]="true" [allowFiltering]="true"
+                [allowHeaderFiltering]="false" [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Quantity" dataField="qty" alignment="left" format="#,##0" [allowSorting]="true"
+                [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions"></dxi-column>
+
+            <dxi-column caption="Square Inches" dataField="sqIn" alignment="left" format="#,##0.00"
+                [allowSorting]="true" [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions"></dxi-column>
+
+            <dxo-scrolling mode="virtual" [renderAsync]="false"> </dxo-scrolling>
+            <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+            <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+        </dx-data-grid>
+        <div class="custom-datagrid-pager-wrapper" *ngIf="gridCount">
+            <app-single-select placeholder="Select Page Size" [clearable]="false" [trackByFn]="pageSizeTrackByFn"
+                [getOptionLabelFn]="getPageSizeOptionLabelFn" [options]="pageSizeOptions" (onSelect)="onSelectPageSize()"
+                [(ngModel)]="selectedPageSize">
+            </app-single-select>
+        </div>
+    </div>
+</main>

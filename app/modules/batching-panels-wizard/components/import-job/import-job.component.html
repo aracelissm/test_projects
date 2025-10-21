@@ -1,0 +1,244 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+    <div class="load-data-buttons">
+        <dx-button icon="copy" hint="Copy Down Job" class="me-1" (click)="onCopyDownClick()">
+        </dx-button>
+        <dx-button icon="import" hint="Process All Files" class="me-1" (click)="processAllFiles()">
+        </dx-button>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-xxl-12 p-1" *ngIf="showJobCopyDown">
+        <form [formGroup]="jobCopyDownForm" (ngSubmit)="onCopyDownSubmit()">
+            <div class="card">
+                <div class="card-header">Job Copy Down</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Copy From (Master)
+                                    <span appMarkAsterisk [formGroup]="jobCopyDownForm" [controlName]="'jobKey'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['jobKey'].errors && !lf['jobKey'].errors?.['pattern']"
+                                        title="Copy from job key is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="copyFromJobKey" class="form-control" [readonly]="true"
+                                    [ngClass]="{'req-border': submitted && lf['jobKey'].errors }" type="text"
+                                    formControlName="jobKey" placeholder="Copy From Job Key">
+                                <div *ngIf="submitted && lf['jobKey'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">From Directory
+                                    <span appMarkAsterisk [formGroup]="jobCopyDownForm" [controlName]="'copyFromPath'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['copyFromPath'].errors && !lf['copyFromPath'].errors?.['pattern']"
+                                        title="Copy from job key is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="copyFromPath" class="form-control" [readonly]="true"
+                                    [ngClass]="{'req-border': submitted && lf['copyFromPath'].errors }" type="text"
+                                    formControlName="copyFromPath" placeholder="F:\Custom\[JOBKEY]">
+                                <div *ngIf="submitted && lf['copyFromPath'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Copy To
+                                    <span appMarkAsterisk [formGroup]="jobCopyDownForm" [controlName]="'copyToJob'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['copyToJob'].errors && !lf['copyToJob'].errors?.['pattern']"
+                                        title="Copy from job key is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="copyToJobKey" class="form-control" [readonly]="true" type="text"
+                                    formControlName="copyToJob" placeholder="Copy To Job Key">
+                                <div *ngIf="submitted && lf['copyToJob'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Job Directory
+                                    <span appMarkAsterisk [formGroup]="jobCopyDownForm" [controlName]="'copyToPath'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['copyToPath'].errors && !lf['copyToPath'].errors?.['pattern']"
+                                        title="Copy from job key is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="copyToPathJobKey" class="form-control" [readonly]="true"
+                                    [ngClass]="{'req-border': submitted && lf['copyToPath'].errors }" type="text"
+                                    formControlName="copyToPath" placeholder="F:\Custom\[JOBKEY]">
+                                <div *ngIf="submitted && lf['copyToPath'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Qty X
+                                    <span appMarkAsterisk [formGroup]="jobCopyDownForm" [controlName]="'qtyX'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['qtyX'].errors" title="Qty X is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <dx-number-box #numberBox [min]="1" [showSpinButtons]="false" format="########0"
+                                    [ngClass]="{'req-border': submitted && lf['qtyX'].errors }"
+                                    formControlName="qtyX"></dx-number-box>
+                                <div *ngIf="submitted && lf['qtyX'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-primary m-2" [disabled]="bCopying"
+                                    (click)="onCopyDownSubmit()">Copy
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-primary m-2" [disabled]="bCopying"
+                                    (click)="onCopyDownCancelClick()">Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="job-items-grid datagrid-wrapper custom-datagrid-pager-exists">
+        <h2 class="title-v1 mb-1">Current Job Items in {{this.jobKey}}</h2>
+        <dx-data-grid [height]="dataGridHeight" [dataSource]="dataSource" [showBorders]="true" [showRowLines]="true"
+            [remoteOperations]="false" [renderAsync]="false" noDataText="No Panels Found" [allowColumnReordering]="true"
+            [allowColumnResizing]="true" (onExporting)="onExporting($event)">
+            <dxo-export [enabled]="true"></dxo-export>
+            <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true" [mode]="columnChooserModes[1].key">
+                <dxo-position my="right top" at="right bottom" of=".dx-datagrid-column-chooser-button"></dxo-position>
+            </dxo-column-chooser>
+
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-search-panel [visible]="true" [width]="200" placeholder="Search...">
+            </dxo-search-panel>
+            <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState"
+                [customSave]="saveState"></dxo-state-storing>
+            <dxi-column caption="RecId" dataField="recId" [allowHeaderFiltering]="false" [allowSearch]="false"
+                [editorOptions]="editorOptions" [visible]="false">
+            </dxi-column>
+            <dxo-toolbar>
+                <dxi-item name="columnChooserButton"></dxi-item>
+                <dxi-item name="exportButton"></dxi-item>
+                <dxi-item name="resetButton">
+                    <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetState()">
+                    </dx-button>
+                </dxi-item>
+                <dxi-item name="searchPanel"></dxi-item>
+            </dxo-toolbar>
+
+            <dxi-column caption="Tag" dataField="jiTag" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Batch Mark" dataField="jiBmark" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Batch Order" dataField="jiBmarkOrder" [allowHeaderFiltering]="false"
+                [allowReordering]="true" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Mark" dataField="jiMark" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Order" dataField="jiMarkOrder" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Eng Mark" dataField="jiEmark" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Eng Order" dataField="jiEmarkOrder" [allowHeaderFiltering]="false"
+                [allowReordering]="true" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Qty" dataField="jiQuant" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Plies" dataField="jiNumPly" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Span" dataField="jiSpan" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Item" dataField="jiItemKey" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Description" dataField="jiItemDesc" [allowHeaderFiltering]="false"
+                [allowReordering]="true" selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Cost" [calculateCellValue]="getCost" format=",##0.##">
+            </dxi-column>
+
+            <dxi-column caption="Bundle" dataField="bundle" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Height" dataField="oaheight" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="TDF" dataField="jiDeposit" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="Stat" dataField="jiStatus" [allowHeaderFiltering]="false" [allowReordering]="true"
+                selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxi-column caption="QTP" dataField="jiQuantToPrice" [allowHeaderFiltering]="false" [allowReordering]="true"
+                [editorOptions]="editorOptions">
+            </dxi-column>
+
+            <dxo-scrolling mode="virtual" [renderAsync]="false">
+            </dxo-scrolling>
+            <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+            <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+        </dx-data-grid>
+        <div class="custom-datagrid-pager-wrapper" *ngIf="gridCount">
+            <app-single-select placeholder="Select Page Size" [clearable]="false" [trackByFn]="pageSizeTrackByFn"
+                [getOptionLabelFn]="getPageSizeOptionLabelFn" [options]="pageSizeOptions"
+                (onSelect)="onSelectPageSize()" [(ngModel)]="selectedPageSize">
+            </app-single-select>
+        </div>
+    </div>
+    <div class="wizard-nav-buttons">
+        <button type="button" class="btn btn-primary m-2" (click)="previous()">{{currentStep.previousButtonText}}
+        </button>
+        <button type="button" *ngIf="!currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="next()">{{currentStep.nextButtonText}}
+        </button>
+        <!-- <button type="button" *ngIf="currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="completeBatching()">{{currentStep.nextButtonText}}
+        </button> -->
+    </div>
+</main>

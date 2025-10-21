@@ -1,0 +1,21 @@
+.pdf-download-button {
+    height: 50px;
+    width: 50px;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0, 0, 0, 0;
+    cursor: pointer;
+}
+
+.pdf-download-button-container {
+    padding: 10px 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pdf-viewer {
+    display: block;
+    min-height: 60vh;
+    width: auto;
+}

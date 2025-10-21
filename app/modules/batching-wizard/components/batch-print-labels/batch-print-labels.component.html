@@ -1,0 +1,191 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <h2 class="title-v1 mb-1">Batch WorkOrders</h2>
+    <div id="printBatchesDiv">
+
+
+        <div class="card dx-widget">
+            <div class="card-header">
+                Print All Batches
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="row">
+                            <div class="col-4">
+                                <button class="btn btn-primary m-2" (click)="printRoofLabels()"
+                                    [disabled]="batchPrintSummary.roofLabelCnt == 0">Print Roof
+                                    Labels({{roofLabelCntDisplay}}){{forMarks}}</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5">
+                                <button class="btn btn-primary m-2" (click)="printFloorLabels()"
+                                    [disabled]="batchPrintSummary.floorLabelCnt == 0">Print Floor
+                                    Labels({{floorLabelCntDisplay}}){{forMarks}}</button>
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" name="asRoofLabel"
+                                        [(ngModel)]="asRoofLabel" />
+                                    Print as
+                                    Roof Labels
+                                </label>
+
+                            </div>
+                            <div class="col-3">
+                                Limit to Mark
+                                <app-multi-select placeholder="Limit to Mark" [(ngModel)]="printMarksMultiSelect"
+                                    (onSelect)="onPrintMarkSelected($event)" [options]="printMarksOptions"
+                                    [getOptionLabelFn]="getPrintMarkLabelFn" [showItemsInsteadOfCount]="true">
+                                </app-multi-select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <button class="btn btn-primary m-2" (click)="onClickOpenShopDrawingReport()">Shop
+                                    Drawing{{forMarks}}</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <button class="btn btn-primary m-2"
+                                    (click)="onClickOpenLaserCutReport()">LaserCut{{forMarks}}</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <button class="btn btn-primary m-2" (click)="onClickOpenPrintAllBatches()">Print All
+                                Batches</button>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input"
+                                        [(ngModel)]="printAllBatchesConfig.printAllBatches" />
+                                    All Batches
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input"
+                                        [(ngModel)]="printAllBatchesConfig.includeSummary" />
+                                    Include Batch Summary Page
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input"
+                                        [(ngModel)]="printAllBatchesConfig.includeMaterial" />
+                                    Include Material Summary Page
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input"
+                                        [(ngModel)]="printAllBatchesConfig.includePlateFetch" />
+                                    Include Plate Fetch Pages
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3" *ngIf="false">
+                        <!-- Add this back when we have time -->
+                        <b>Last Batch Options</b>
+                        <p>JobKey: {{lastBatchOptions?.jobKey}}</p>
+                        <p>Total BdFt: {{lastBatchOptions?.batchOptionTotalBdFt}}</p>
+                        <p>Marks: </p>
+                        <p>Dupe Amount: {{lastBatchOptions?.batchOptionsNumDups}}</p>
+                        <p>Dupe to Job: {{lastBatchOptions?.batchOptionsDupJobs}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="demo-container">
+            <dx-data-grid [height]="500" id="gridContainer" [dataSource]="dataSource" [showBorders]="true"
+                [showRowLines]="true" noDataText="No Data Found" keyExpr="woid" [allowColumnResizing]="true"
+                (onExporting)="onExporting($event)">
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true"
+                    [mode]="columnChooserModes[1].key">
+                    <dxo-position my="right top" at="right bottom"
+                        of=".dx-datagrid-column-chooser-button"></dxo-position>
+                </dxo-column-chooser>
+                <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+                <dxo-sorting mode="multiple"></dxo-sorting>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-search-panel [visible]="true" [width]="240" [text]="searchResult"
+                    placeholder="Search..."></dxo-search-panel>
+                <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState"
+                    [customSave]="saveState"></dxo-state-storing>
+                <dxo-toolbar>
+                    <dxi-item name="columnChooserButton"></dxi-item>
+                    <dxi-item name="exportButton"></dxi-item>
+                    <dxi-item>
+                        <div *dxTemplate>
+                            <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetState()">
+                            </dx-button>
+                        </div>
+                    </dxi-item>
+                    <dxi-item name="searchPanel"></dxi-item>
+                </dxo-toolbar>
+
+                <dxi-column caption="WOID" dataField="woid" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Mark" dataField="mark" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Activity" dataField="activity" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Designer" dataField="designer" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Status" dataField="status" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Due" dataField="due" alignment="left" [allowSorting]="true" [allowFiltering]="true"
+                    dataType="date" format="MM/dd/yyyy HH:mm" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Start" dataField="start" alignment="left" [allowSorting]="true" dataType="date"
+                    format="MM/dd/yyyy HH:mm" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                    [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Done" dataField="done" alignment="left" [allowSorting]="true" dataType="date"
+                    format="MM/dd/yyyy HH:mm" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                    [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Hours" dataField="hours" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="EstH" dataField="estH" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="SchedStart" dataField="schedStart" alignment="left" [allowSorting]="true"
+                    dataType="date" format="MM/dd/yyyy HH:mm" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                    [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="SchedStop" dataField="schedStop" alignment="left" [allowSorting]="true"
+                    dataType="date" format="MM/dd/yyyy HH:mm" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                    [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+
+                <dxo-scrolling mode="virtual" [renderAsync]="false"> </dxo-scrolling>
+                <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+                <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+            </dx-data-grid>
+        </div>
+
+    </div>
+    <div class="wizard-nav-buttons">
+        <button type="button" class="btn btn-primary m-2" (click)="previous()">{{currentStep.previousButtonText}}
+        </button>
+        <button type="button" *ngIf="!currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="next()">{{currentStep.nextButtonText}}
+        </button>
+        <button type="button" *ngIf="currentStep.isLastStep" class="btn btn-primary m-2"
+            (click)="sendToShop()">{{currentStep.nextButtonText}}{{forMarks}}
+        </button>
+    </div>
+
+    <dx-load-panel [position]="{ of: '#printBatchesDiv' }" [visible]="loadingPanelVisible" [showIndicator]="true"
+        [showPane]="true" [shading]="true" [shadingColor]="'rgba(0, 0, 0, 0.4)'" [hideOnOutsideClick]="false">
+    </dx-load-panel>
+</main>

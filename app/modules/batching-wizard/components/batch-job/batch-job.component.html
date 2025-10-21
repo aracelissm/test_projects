@@ -1,0 +1,336 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <div class="">
+        <h1>Time to Batch</h1>
+
+        <div class="demo-container">
+            <dx-data-grid [height]="500" id="gridContainer" [(selectedRowKeys)]="selectedKeys" [dataSource]="dataSource"
+                [showBorders]="true" [showRowLines]="true" noDataText="No Data Found" keyExpr="recId"
+                [allowColumnResizing]="true" (onSelectionChanged)="batchSelectedValidator()"
+                (onExporting)="onExporting($event)">
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true"
+                    [mode]="columnChooserModes[1].key">
+                    <dxo-position my="right top" at="right bottom"
+                        of=".dx-datagrid-column-chooser-button"></dxo-position>
+                </dxo-column-chooser>
+                <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+                <dxo-sorting mode="multiple"></dxo-sorting>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-search-panel [visible]="true" [width]="240" [text]="searchResult"
+                    placeholder="Search..."></dxo-search-panel>
+                <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState"
+                    [customSave]="saveState"></dxo-state-storing>
+                <dxo-toolbar>
+                    <dxi-item location="before">
+                        <dx-button text="Clear Selection" [disabled]="!selectedKeys.length"
+                            (onClick)="dataGrid.instance.clearSelection()">
+                        </dx-button>
+                    </dxi-item>
+                    <dxi-item name="columnChooserButton"></dxi-item>
+                    <dxi-item name="exportButton"></dxi-item>
+                    <dxi-item>
+                        <div *dxTemplate>
+                            <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetState()">
+                            </dx-button>
+                        </div>
+                    </dxi-item>
+                    <dxi-item name="searchPanel"></dxi-item>
+                </dxo-toolbar>
+                <dxi-column type="selection" [fixed]="true"></dxi-column>
+                <dxi-column caption="Tag" dataField="jiTag" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Batch Mark" dataField="jiBmark" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Batch Order" dataField="jiBmarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Mark" dataField="jiMark" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Order" dataField="jiMarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Eng Mark" dataField="jiEmark" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Eng Order" dataField="jiEmarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Qty" dataField="jiQuant" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Plies" dataField="jiNumPly" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Span" dataField="jiSpan" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Item" dataField="jiItemKey" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Description" dataField="jiItemDesc" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Cost" [calculateCellValue]="calculateCost" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Bundle" dataField="bundle" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Height" dataField="oaheight" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="TDF" dataField="jiDeposit" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Stat" dataField="jiStatus" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="QTP" dataField="jiQuantToPrice" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxo-selection mode="multiple" showCheckBoxesMode="always">
+                </dxo-selection>
+                <dxo-scrolling mode="virtual" [renderAsync]="false"> </dxo-scrolling>
+                <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+                <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+            </dx-data-grid>
+        </div>
+        <div class="row" style="padding-left: 10px;">
+            <div class="col-md-2 batch-mark-status-container">
+                <p class="batch-mark-status-title">Batch Mark Status</p>
+                <div *ngFor="let item of batchMarkList.marks; index as i" [class]="batchItemClass(item)">
+                    <ng-container *ngIf="(!clearBatchMouseOn && !batchMouseOn); else batchClearTarget">
+                        {{item.mark}} - {{item.markStatus}}{{itemInShop(item)}}
+                    </ng-container>
+
+                    <ng-template #batchClearTarget>
+                        <ng-container *ngIf="clearBatchMouseOn; else batchTarget">
+                            {{item.mark}} - {{clearBatchMarkDisplay(item)}}{{itemInShop(item)}}
+                        </ng-container>
+                    </ng-template>
+                    <ng-template #batchTarget>{{item.mark}} -
+                        {{batchMarkDisplay(item)}}{{itemInShop(item)}}</ng-template>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div *ngIf="batchData != undefined">
+                    <div class="batchHeading">WorkOrders</div>
+                    <div class="batchLineItem" *ngFor="let item of batchDataWorkOrders">
+                        <i class="dx-icon-tags"> </i> {{item.name }}: {{item.count}}
+                    </div>
+
+                    <div class="batchHeading">Cuts</div>
+                    <div class="batchLineItem"><i class="dx-icon-runner"> </i> Lumber Fetch:
+                        {{batchData.totalLumberFetch}}
+                    </div>
+                    <div class="batchLineItem"><i class="dx-icon-preferences"> </i> Total Piece Cuts:
+                        {{batchData.totalPieceCuts}}</div>
+
+                    <div class="batchHeading">Assembly</div>
+                    <div class="batchLineItem"><i class="dx-icon-runner"> </i> Plate Fetch:
+                        {{batchData.totalPlateFetch}}
+                    </div>
+                    <div class="batchLineItem"><i class="dx-icon-product"> </i> Total Trusses:
+                        {{batchData.totalTrusses}}
+                    </div>
+                    <div class="batchLineItem"><i class="dx-icon-product"> </i> Total Pieces:
+                        {{batchData.totalTrussPieces}}
+                    </div>
+                    <div class="batchHeading">Process Time</div>
+                    <div class="batchLineItem"><i class="dx-icon-clock"> </i> Batch: {{timeElapsed |
+                        formatMilliseconds}} </div>
+                    <div class="batchLineItem"><i class="dx-icon-clock"> </i> SMP2: {{smp2TimeElapsed |
+                        formatMilliseconds}} </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-controls">
+
+                    <div class="input-controls-col1">
+                        <form [formGroup]="batchingInputGroup">
+                            <div class="form-group">
+                                <label for="jobBatchQty">Job Multiplier
+                                    <span appMarkAsterisk [formGroup]="batchingInputGroup"
+                                        [controlName]="'jobBatchQty'">
+                                    </span>
+                                    <a *ngIf="lf['jobBatchQty'].errors && !lf['jobBatchQty'].errors?.['pattern']"
+                                        title="Job multiplier is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                    <a *ngIf="lf['jobBatchQty'].errors?.['pattern']"
+                                        title="Job multiplier must be a positive number">
+                                        <img src=" assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                    <a *ngIf="showQtyError" title="More dupe jobs than multiplier">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input type="number" id="jobBatchQty" [min]="1" [readonly]="true"
+                                    [ngClass]="{'req-border': lf['jobBatchQty'].errors || showQtyError }"
+                                    (ngModelChange)="batchDupJobsValidator()" class="form-control"
+                                    formControlName="jobBatchQty" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="batchDupJobs">Dup'd JobKeys
+                                    <a *ngIf="showDupError" title="No duplicate JobKeys entered">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="batchDupJobs" (ngModelChange)="batchDupJobsValidator()" [readonly]="true"
+                                    [ngClass]="{'req-border': lf['batchDupJobs'].errors || showDupError }"
+                                    class="form-control" formControlName="batchDupJobs" />
+                            </div>
+
+                            <div>
+                                <label for="batchLocation">Sort</label>
+                                <ng-select id="batchLocation" class="app-single-select" [clearable]="false"
+                                    formControlName="batchLocation">
+                                    <ng-option value="Normal Sort">Normal Sort</ng-option>
+                                    <ng-option value="By Truss">By Truss</ng-option>
+                                </ng-select>
+                            </div>
+                            <div>
+                                Limit to Mark
+                                <app-multi-select placeholder="Limit to Mark" [(ngModel)]="batchMarksMultiSelect"
+                                    (onSelect)="onBatchMarkSelected($event)" [options]="batchMarksOptions"
+                                    [getOptionLabelFn]="getPrintMarkLabelFn" [showItemsInsteadOfCount]="true">
+                                </app-multi-select>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-controls-col3">
+                    <form [formGroup]="batchingInputGroup">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" (ngModelChange)="batchSelectedValidator()" class="form-check-input"
+                                    [ngClass]="{'req-border': showSelectedJobItemsError }" formControlName="batchType"
+                                    value="All" />
+                                Batch All Items
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" (ngModelChange)="batchSelectedValidator()" class="form-check-input"
+                                    [ngClass]="{'req-border':showSelectedJobItemsError }" formControlName="batchType"
+                                    value="Selected" />
+                                Batch
+                                Selected Items
+                                <a *ngIf="showSelectedJobItemsError" title="No job items selected">
+                                    <img src="assets/images/validation-info.svg" class="icon20px">
+                                </a>
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="jacksCombined" />
+                                Jacks
+                                in
+                                one WO
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="newFloorRules" />
+                                New
+                                Floor
+                                Rules
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="als4" /> ALS4
+                                Rules
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="cutByTruss" />
+                                Cut
+                                By
+                                Truss
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="allInAls" />
+                                All in
+                                ALS
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="hundeggerStacking" />
+                                Hundegger Stacking
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="sqCutBevels" />
+                                SqCut
+                                Bevels
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="num2Sub" /> Sub
+                                #2
+                                for
+                                2x4
+                                #3 greater than 7ft
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-display-container">
+
+
+
+        </div>
+
+
+
+        <div *ngIf="!batchSummaryInited">
+            (Checking Batch Summary - Loading)
+        </div>
+        <button [ngClass]="'btn btn-primary m-2 ' + (this.canClearbatch() ? '' : 'disabled')"
+            (click)="clearBatchConfirm()" (mouseenter)="clearBatch_MouseEnter()"
+            (mouseleave)="clearBatch_MouseLeave()">Clear
+            Batch{{forMarks}}</button>
+        <button [ngClass]="'btn btn-primary m-2 ' + (this.canTriggerBatch() ? '' : 'disab2led')"
+            *ngIf="!this.batchInProgress" class="btn btn-primary m-2" (click)="triggerBatchConfirm()"
+            (mouseenter)="batch_MouseEnter()" (mouseleave)="batch_MouseLeave()">Start
+            Batch{{forMarks}}</button>
+        <button *ngIf="this.batchInProgress" class="btn btn-primary m-2">Batching In progress</button>
+        <button *hasPermission="'MANUALSMP2GEN'"
+            [ngClass]="'btn btn-primary m-2 ' + (!this.canTriggerBatch() ? '' : 'disabled')"
+            (click)="generateSMP2()">SMP2
+            Regenerate</button>
+
+        <p *ngIf="this.batchInProgress"><strong>Batching takes a moment. Please do not navigate away from this
+                page.</strong></p>
+        <p *ngIf="this.batchingErrorText"><strong>{{batchingErrorText}}</strong></p>
+    </div>
+    <div class="wizard-nav-buttons">
+        <button type="button" class="btn btn-primary m-2" (click)="previous()">{{currentStep.previousButtonText}}
+        </button>
+        <button type="button" *ngIf="!currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="next()">{{currentStep.nextButtonText}}
+        </button>
+        <button type="button" *ngIf="currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="completeBatching()">{{currentStep.nextButtonText}}
+        </button>
+    </div>
+</main>

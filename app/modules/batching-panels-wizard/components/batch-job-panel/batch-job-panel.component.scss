@@ -1,0 +1,20 @@
+.batchLineItem {
+    color: rgb(4, 39, 39);
+    padding-left: 12px
+}
+
+.batchHeading {
+    font-size: medium;
+}
+
+.input-display-container {
+    display: flex;
+    column-gap: 10em;
+    flex-wrap: wrap;
+}
+
+.input-controls {
+    display: flex;
+    column-gap: 50px;
+    flex-wrap: wrap;
+}

@@ -1,0 +1,1116 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+  <div class="row">
+    <h2 class="title-v1 mb-1">Bid</h2>
+  </div>
+  <div class="col-md-12 col-lg-12 col-xxl-12 p-1">
+    <div class="card">
+      <div class="card-header">
+        Bid Info
+      </div>
+      <div class="card-body">
+        <div [class.opacity30]='AddCustomer ||AddProject || AddContact'>
+          <div class="row">
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label w-100">Plant Location <span class="mandatory">*</span><a
+                    *ngIf="submittedBid && !(selectedPlantLocation?.locationName)"
+                    title="Plant Location is required"><img src="assets/images/validation-info.svg"
+                      class="icon20px float-end"></a></label>
+                <app-single-select (onSelect)="onSelectplantlocation($event)"
+                  [ngClass]="{'select': submittedBid && !(selectedPlantLocation?.locationName)}"
+                  placeholder="Search Plant Location" bindLabel="locationName" [searchable]="true"
+                  typeToSearchText="Search Plant Location" [minTermLength]="minLengthTerm"
+                  [trackByFn]="plantLocationTrackByFn" [getOptionLabelFn]="getPlantLocationOptionLabelFn"
+                  [options$]="plantLocationOptions$" [optionsLoading]="plantLocationOptionsLoading"
+                  [optionsInput$]="plantLocationOptionsInput$" [(ngModel)]="selectedPlantLocation">
+                </app-single-select>
+                <div *ngIf="submittedBid && !(selectedPlantLocation?.locationName)" class="col-md-12 form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-xxl-2 col-xs-12">
+              <label for="exampleDataList" class="form-label w-100">Bid Number <span class="mandatory">*</span>
+                <span class="float-end"><button class="btn-default " title="Edit" (click)="enableEditMode()"><i
+                      class="icon dx-icon-edit"></i></button> <button *ngIf="editMode" title="Save" (click)="save()"><i
+                      class="icon dx-icon-save"></i></button></span>
+              </label>
+              <div *ngIf="editMode">
+                <form [formGroup]="createBidForm">
+                  <div class="input-group numfix">
+                    <input id="bid_Number" type="text"
+                      [ngClass]="{'req-border': submittedBid && lfBid['bid_Number'].errors}" class="form-control"
+                      placeholder="Enter Bid Number" formControlName="bid_Number" (keyup)="editedValue()">
+                    <div class="input-group-append">
+                      <button class="input-group-text" (click)="GenerateBidNumber()"
+                        style="border-right:1px solid #ced4da; border-top:1px solid #ced4da;border-bottom:1px solid #ced4da;"><img
+                          src="assets/images/generate-icon.svg" class="icon20px"></button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div *ngIf="!editMode">
+                <div class="input-group numfix">
+                  <app-single-select style="width:76%" placeholder="Select Job" bindLabel="jobKey" [searchable]="true"
+                    typeToSearchText="Search JobNumber" [minTermLength]="minLengthTerm"
+                    [trackByFn]="getSearchJobTrackByFn" [getOptionLabelFn]="getSearchJobOptionLabelFn"
+                    [options$]="searchJobOptions$" [optionsLoading]="searchJobOptionsLoading"
+                    [optionsInput$]="searchJobOptionsInput$" [(ngModel)]="selectedSearchJob"
+                    (onSelect)="onSelectJobNumber($event)" (onClear)="onClearJobNumber($event)">
+                  </app-single-select>
+                  <div class="input-group-append">
+
+                    <button class="input-group-text" (click)="GenerateBidNumber()"
+                      style="border-right:1px solid #ced4da; border-top:1px solid #ced4da;border-bottom:1px solid #ced4da;"><img
+                        src="assets/images/generate-icon.svg" class="icon20px"></button>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Customer Key<span class="mandatory">*</span></label>
+                <a class="float-end" *ngIf="submittedBid && !selectedCustomer" title="Customer is required"><img
+                    src="assets/images/validation-info.svg" class="icon20px"></a>
+                <button class="plus-btn cusContact float-end nobg" title="Add" *hasPermission="'CRCUST'"
+                  (click)="onClickCustomer()"><img src="assets/images/plus.svg" class="plus-icon"
+                    *hasPermission="['CRCUST']"></button>
+                <app-single-select [ngClass]="{'select': submittedBid && !selectedCustomer}"
+                  placeholder="Search Customer Key" bindLabel="customerKey" [searchable]="true"
+                  typeToSearchText="Search Customer" [minTermLength]="minLengthTerm" [trackByFn]="customerTrackByFn"
+                  [getOptionLabelFn]="getCustomerOptionLabelFn" [options$]="customerOptions$"
+                  [optionsLoading]="customerOptionsLoading" [optionsInput$]="customerOptionsInput$"
+                  (onSelect)="onSelectCustomer($event)" (onClear)="onClearCustomer($event)"
+                  [(ngModel)]="selectedCustomer">
+                </app-single-select>
+                <div *ngIf="submittedBid && !selectedCustomer" class="col-md-12 form-error-tf">
+                </div>
+              </div>
+
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Project <span class="mandatory">*</span></label>
+                <a class="float-end" *ngIf="submittedBid && !selectedProject  ||
+                                      this.submittedBid && this.selectedProject.length == 0"
+                  title="Project is required"><img src="assets/images/validation-info.svg" class="icon20px"></a>
+                <button class="plus-btn cusContact float-end nobg" title="Add" *hasPermission="'CRPROJ'"
+                  (click)="onClickProject()"><img src="assets/images/plus.svg" class="plus-icon"
+                    *hasPermission="'CRPROJ'"></button>
+                <app-single-select [ngClass]="{'select': submittedBid && !selectedProject  ||
+                              this.submittedBid && this.selectedProject.length == 0}" placeholder="Search Project"
+                  placeholder="Search Project" bindLabel="subdivision" [searchable]="true"
+                  typeToSearchText="Search Project" [minTermLength]="minLengthTerm" [trackByFn]="projectTrackByFn"
+                  [getOptionLabelFn]="getProjectOptionLabelFn" [options$]="projectOptions$"
+                  [optionsLoading]="projectOptionsLoading" [optionsInput$]="projectOptionsInput$"
+                  (onSelect)="onSelectProject($event)" (onClear)="onClearProject($event)" [(ngModel)]="selectedProject">
+                </app-single-select>
+                <div *ngIf="submittedBid && !selectedProject  ||
+                              this.submittedBid && this.selectedProject.length == 0" class="col-md-12 form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Project Contact <span class="mandatory">*</span>
+                </label>
+                <a class="float-end" *ngIf="submittedBid && !selectedcontact  ||
+                                  this.submittedBid && this.selectedcontact.length == 0"
+                  title="Project Contact is required"><img src="assets/images/validation-info.svg" class="icon20px"></a>
+                <button class="plus-btn cusContact float-end nobg" title="Add" (click)="onClickPlus()"><img
+                    src="assets/images/plus.svg" class="plus-icon" *hasPermission="['CRECONT']"></button>
+                <app-single-select [ngClass]="{'select': submittedBid && !selectedcontact ||
+                              this.submittedBid && this.selectedcontact.length == 0}" placeholder="Select Contact"
+                  bindLabel="last_Name" [minTermLength]="minLengthTerm" [trackByFn]="contactTrackByFn"
+                  [getOptionLabelFn]="getcontactOptionLabelFn" [options$]="contactOptions$"
+                  [optionsLoading]="contactOptionsLoading" [optionsInput$]="contactOptionsInput$"
+                  [(ngModel)]="selectedcontact">
+                </app-single-select>
+                <div *ngIf="submittedBid && !selectedcontact  ||
+                              this.submittedBid && this.selectedcontact.length == 0" class="col-md-12 form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label w-100">Bid Type <span class="mandatory">*</span>
+                  <a *ngIf="submittedBid && !bidTypeSelected" title="Bid Type is required"><img
+                      src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+                <app-single-select [ngClass]="{'select': submittedBid && !bidTypeSelected}" placeholder="Select BidType"
+                  bindLabel="bidType" [minTermLength]="minLengthTerm" [trackByFn]="bidTypeTrackByFn"
+                  [getOptionLabelFn]="getBidTypeOptionLabelFn" [options$]="bidTypeOptions$"
+                  [optionsLoading]="bidTypeOptionsLoading" [optionsInput$]="bidTypeOptionsInput$"
+                  [(ngModel)]="bidTypeSelected">
+                </app-single-select>
+                <div *ngIf="submittedBid && !bidTypeSelected" class="col-md-12 form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label class="label-block">Bid Login Date</label>
+                <div>
+                  <dx-date-box [(value)]="bidlogindate" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                    [showClearButton]="true" (onValueChanged)="onChangebidloginDate($event)"
+                    placeholder="Select login Date">
+                  </dx-date-box>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label class="label-block">Bid Due Date<a *ngIf="error.isError"
+                    title="Due Date should be greater than Login Date"><img src="assets/images/validation-info.svg"
+                      class="icon20px"></a></label>
+                <div>
+                  <dx-date-box [(value)]="bidduedate" (blur)="compareDates()" [ngClass]="{'valid': error.isError}"
+                    [openOnFieldClick]="true" [acceptCustomValue]="false" [showClearButton]="true"
+                    (onValueChanged)="onChangebiddueDate($event)" placeholder="Select Due Date" type="date">
+                  </dx-date-box>
+                </div>
+                <div *ngIf="submittedBid && !bidduedate" class="form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <form [formGroup]="createBidForm">
+                  <div class="mb-3">
+                    <label class="label-block">Model Summary</label>
+                    <input id="model_Info" type="text" [readonly]="true" class="form-control"
+                      placeholder="Model Summary" formControlName="model_Info">
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label for="exampleDataList" class="label-block  w-100">Bidding Status <span class="mandatory">*</span>
+                  <a *ngIf="submittedBid && !bidSelectedstatus" title="Bidding Status is required"><img
+                      src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+                <app-single-select [ngClass]="{'select': submittedBid && !bidSelectedstatus}"
+                  placeholder="Select Status" bindLabel="bidStatus" [minTermLength]="minLengthTerm"
+                  [trackByFn]="bidStatusTrackByFn" [getOptionLabelFn]="getbidStatusOptionLabelFn"
+                  [options$]="bidStatusOptions$" [optionsLoading]="bidStatusOptionsLoading"
+                  [optionsInput$]="bidStatusOptionsInput$" [(ngModel)]="bidSelectedstatus">
+                </app-single-select>
+                <div *ngIf="submittedBid && !bidSelectedstatus" class="col-md-12 form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2  col-xs-12">
+              <div class="mb-3">
+                <label class="label-block w-100">Job Type <span class="mandatory">*</span> <a
+                    *ngIf="submittedBid && !selectedType" title="Job Type is required"><img
+                      src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+                <app-single-select [ngClass]="{'select': submittedBid && !selectedType}" placeholder="Select JobType"
+                  bindLabel="type" [minTermLength]="minLengthTerm" [trackByFn]="jobTypeTrackByFn"
+                  [getOptionLabelFn]="getJobTypeOptionLabelFn" [options$]="jobTypeOptions$"
+                  [optionsLoading]="jobTypeOptionsLoading" [optionsInput$]="jobTypeOptionsInput$"
+                  (onClear)="onClearType($event)" (onSelect)="onSelectJobType($event)" [(ngModel)]="selectedType">
+                </app-single-select>
+                <div *ngIf="submittedBid && !selectedType || submittedBid&&selectedType?.length == 0"
+                  class="form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label class="label-block w-100">Classification <span class="mandatory">*</span><a
+                    *ngIf="submittedBid && !selectedClassification || submittedBid&&selectedClassification?.length == 0"
+                    title="Classification is required"><img src="assets/images/validation-info.svg"
+                      class="icon20px float-end"></a></label>
+                <app-single-select
+                  [ngClass]="{'select': submittedBid && !selectedClassification || submittedBid&&selectedClassification?.length == 0}"
+                  placeholder="Select Classification" bindLabel="class" [minTermLength]="minLengthTerm"
+                  [trackByFn]="jobClassificationTrackByFn" [getOptionLabelFn]="getJobClassificationOptionLabelFn"
+                  [options$]="jobClassificationOptions$" [optionsLoading]="jobClassificationOptionsLoading"
+                  [optionsInput$]="jobClassificationOptionsInput$" [(ngModel)]="selectedClassification"
+                  (onSelect)="onSelectClassification($event)" (onClear)="onClearClassification($event)">
+                </app-single-select>
+                <div
+                  *ngIf="submittedBid && !selectedClassification || submittedBid&&selectedClassification?.length == 0"
+                  class="form-error-tf">
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <form [formGroup]="createBidForm">
+                <div class="mb-3">
+                  <label class="label-block">Product Type</label>
+                  <div class="input-group textfix">
+                    <input id="product_type" type="text" [readonly]="true" class="form-control"
+                      placeholder="Product Type" formControlName="product_type">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <label class="label-block w-100 textfix">Product Line <span class="mandatory">*</span>
+                  <a *ngIf="submittedBid && !ProductLineSelected" title="Product Line is required"><img
+                      src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+                <app-single-select [ngClass]="{'select': submittedBid && !ProductLineSelected}"
+                  placeholder="Select Product Line" bindLabel="productLine" [minTermLength]="minLengthTerm"
+                  [trackByFn]="ProductLineTrackByFn" [getOptionLabelFn]="getProductLineOptionLabelFn"
+                  [options$]="ProductLineOptions$" [optionsLoading]="ProductLineOptionsLoading"
+                  [optionsInput$]="ProductLineOptionsInput$" [(ngModel)]="ProductLineSelected">
+                </app-single-select>
+                <div *ngIf="submittedBid && !ProductLineSelected" class="col-md-12 form-error-tf">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+              <div class="mb-3">
+                <form [formGroup]="createBidForm">
+                  <label class="form-label ">Bid Comment <a
+                      *ngIf="submittedBid && lfBid['Bid_Comment'].errors?.['maxlength']"
+                      title="Please Enter maximum of 255 characters"><img src="assets/images/validation-info.svg"
+                        class="icon20px"></a></label>
+                  <textarea class="form-control cus-textarea-height " placeholder="Leave a comment here"
+                    id="Bid_Comment"
+                    [ngClass]="{'req-border': submittedBid && lfBid['Bid_Comment'].errors?.['maxlength']}"
+                    formControlName="Bid_Comment"></textarea>
+                  <div *ngIf="submittedBid && lfBid['Bid_Comment'].errors" class="form-error-tf">
+                    <div *ngIf="lfBid['Bid_Comment'].errors['maxlength']">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12 col-xxl-4">
+              <form [formGroup]="createBidForm">
+                <div class="mb-3">
+                  <label for="exampleDataList" class="form-label">
+                    Project Bid Address </label>
+                  <input id="joB_REF2" class="form-control" type="text" formControlName="joB_REF2"
+                    placeholder="Address">
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-4">
+              <form [formGroup]="createBidForm">
+                <div class="mb-3">
+                  <label for="exampleDataList" class="form-label">
+                    Folder Path </label>
+                  <div class="input-group">
+                    <input id="jobDir" class="form-control" type="text" formControlName="jobDir">
+                    <!-- <input #event class="form-control" name="filename" id="jobDir" class="form-control" type="file"
+                      formControlName="jobDir" (change)="onFileChanged($event)" [(ngModel)]="filename" webkitdirectory
+                      directory hidden> -->
+                    <span class="input-group-text icon-btn-container"><button name="openFile" (click)="openFile()"><i
+                          class="fas fa-ellipsis-h"></i></button></span>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+            <!-- <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+                          <div class="mb-3">
+                              <label class="form-label">Search Job </label>
+                              <app-single-select placeholder="Select Job" bindLabel="jobKey" [searchable]="true"
+                                  typeToSearchText="Search JobNumber" [minTermLength]="minLengthTerm"
+                                  [trackByFn]="getSearchJobTrackByFn" [getOptionLabelFn]="getSearchJobOptionLabelFn"
+                                  [options$]="searchJobOptions$" [optionsLoading]="searchJobOptionsLoading"
+                                  [optionsInput$]="searchJobOptionsInput$" [(ngModel)]="selectedSearchJob">
+                              </app-single-select>
+                          </div>
+                      </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create customer Form -->
+    <div class="row mt-4 " *ngIf="AddCustomer">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h2 class="title-v1">Create Customer</h2>
+      </div>
+      <div class="row mt-2">
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcustomerForm" (ngSubmit)="OnsubmitCustomer()">
+              <label for="exampleDataList" class="form-label w-100">Customer Name <span class="mandatory">*</span>
+                <a *ngIf="submittedCustomer && lf['cusT_NAME'].errors?.['required']"
+                  title="Customer Name is required"><img src="assets/images/validation-info.svg"
+                    class="icon20px float-end"></a>
+                <a *ngIf="lf['cusT_NAME'].errors?.['maxlength']" title=" Customer Name can allow maximum length 64"><img
+                    src=" assets/images/validation-info.svg" class="icon20px"></a>
+              </label>
+              <input id="cusT_NAME" class="form-control"
+                [ngClass]="{'req-border': submittedCustomer && lf['cusT_NAME'].errors }" type="text"
+                formControlName="cusT_NAME" placeholder="Customer Name">
+              <div *ngIf="submittedCustomer && lf['cusT_NAME'].errors" class="form-error-tf">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcustomerForm" (ngSubmit)="OnsubmitCustomer()">
+              <label for="exampleDataList" class="form-label w-100">Customer Key <span class="mandatory">*</span>
+                <a *ngIf="submittedCustomer && lf['cusT_KEY'].errors && lf['cusT_KEY'].errors?.['required']"
+                  title="Customer Key is required">
+                  <img src="assets/images/validation-info.svg" class="icon20px float-end"></a>
+                <a *ngIf="lf['cusT_KEY'].errors?.['pattern']"
+                  title=" CustomerKey can contain (a-z){A-Z} and  @ _ . ! - & Only"><img
+                    src=" assets/images/validation-info.svg" class="icon20px"></a>
+                <a *ngIf="lf['cusT_KEY'].errors?.['maxlength']" title=" Customer Key can allow maximum length 25"><img
+                    src=" assets/images/validation-info.svg" class="icon20px"></a>
+              </label>
+              <input id="cusT_KEY" class="form-control"
+                [ngClass]="{'req-border': submittedCustomer && lf['cusT_KEY'].errors }" type="text"
+                placeholder="Customer Key" formControlName="cusT_KEY">
+              <div *ngIf="submittedCustomer && lf['cusT_KEY'].errors" class="form-error-tf">
+                <div *ngIf="lf['cusT_KEY'].errors['pattern']"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label w-100">Sales Representative <span class="mandatory">*</span>
+              <a *ngIf="submittedCustomer && !selectedSalesRep|| this.submittedCustomer && this.selectedSalesRep.length == 0"
+                title="Sales Representative is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedCustomer && !selectedSalesRep|| this.submittedCustomer && this.selectedSalesRep.length == 0}"
+              placeholder="Select Sales Representative" bindLabel="smaN_NAME" [minTermLength]="minLengthTerm"
+              [getOptionLabelFn]="getSalesRepOptionLabelFn" [options$]="salesRepOptions$"
+              [optionsLoading]="salesRepOptionsLoading" [optionsInput$]="salesRepOptionsInput$"
+              [(ngModel)]="selectedSalesRep">
+            </app-single-select>
+            <div
+              *ngIf="submittedCustomer && !selectedSalesRep || this.submittedCustomer && this.selectedSalesRep.length == 0"
+              class="form-error-tf"></div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label w-100">Status <span class="mandatory">*</span>
+              <a *ngIf="submittedCustomer && !selectedCustomerStatus" title="Status is required"><img
+                  src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+            <app-single-select [ngClass]="{'select': submittedCustomer && !selectedCustomerStatus}"
+              placeholder="Select Status" bindLabel="custStatus" [minTermLength]="minLengthTerm"
+              [trackByFn]="statusTrackByFn" [getOptionLabelFn]="getstatusOptionLabelFn" [options$]="statusOptions$"
+              [optionsLoading]="statusOptionsLoading" [optionsInput$]="statusOptionsInput$"
+              [(ngModel)]="selectedCustomerStatus">
+            </app-single-select>
+            <div *ngIf="submittedCustomer && !selectedCustomerStatus" class="form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label w-100">Terms <span class="mandatory">*</span>
+              <a *ngIf="submittedCustomer && !selectedterms || this.submittedCustomer && this.selectedterms.length == 0"
+                title="Terms is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedCustomer && !selectedterms || this.submittedCustomer && this.selectedterms.length == 0}"
+              placeholder="Select Terms" bindLabel="cusT_TERM_DESC" [minTermLength]="minLengthTerm"
+              [options$]="termsOptions$" [getOptionLabelFn]="gettermsOptionLabelFn"
+              [optionsLoading]="termsOptionsLoading" [optionsInput$]="termsOptionsInput$" [(ngModel)]="selectedterms">
+            </app-single-select>
+            <div *ngIf="submittedCustomer && !selectedterms || this.submittedCustomer && this.selectedterms.length == 0"
+              class="form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcustomerForm" (ngSubmit)="OnsubmitCustomer()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Address Line1</label>
+                <input id="bilL_ADDR1" class="form-control" type="text" formControlName="bilL_ADDR1"
+                  placeholder="Address Line1">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcustomerForm" (ngSubmit)="OnsubmitCustomer()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Address Line2</label>
+                <input id="bilL_ADDR2" class="form-control" type="text" formControlName="bilL_ADDR2"
+                  placeholder="Address Line2">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcustomerForm" (ngSubmit)="OnsubmitCustomer()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">City,State Zip</label>
+                <input id="bilL_ADDR3" class="form-control" type="text" formControlName="bilL_ADDR3"
+                  placeholder="City,State Zip">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcustomerForm" (ngSubmit)="OnsubmitCustomer()">
+              <label for="exampleDataList" class="form-label">Labels</label>
+              <div class="form-check form-switch">
+                <input id="cust_Active" formControlName="cust_Active" class="form-check-input" id="cust_Active"
+                  type="checkbox" checked>
+                <p>{{lf['cust_Active'].value? "Yes":"No"}}</p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="section-devider">
+        <div class="text-end"><button type="button" class="btn btn-outline-dark m-2 no-border-radius"
+            (click)="onClickCustomerCancel()">Cancel</button> <button type="button" class="btn btn-primary m-2"
+            (click)="OnsubmitCustomer()">Create</button>
+        </div>
+      </div>
+    </div>
+    <!-- Create customer End  -->
+    <!-- create project form -->
+    <div class="row mt-4 cusContactForm" *ngIf="AddProject">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h2 class="title-v1">Create Project</h2>
+      </div>
+      <div class="row mt-2">
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label class="form-label w-100">Location <span class="mandatory">*</span>
+              <a *ngIf="submittedProject && !(selectedProjectPlantLocation?.locationName)"
+                title="Location is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+
+            <app-single-select [ngClass]="{'select': submittedProject && !(selectedProjectPlantLocation?.locationName)}"
+              style="width:80%" placeholder="Search Plant Location" bindLabel="locationName" [searchable]="true"
+              typeToSearchText="Search Plant Location" [minTermLength]="minLengthTerm"
+              [trackByFn]="plantLocationTrackByFn" [getOptionLabelFn]="getPlantLocationOptionLabelFn"
+              [options$]="plantLocationOptions$" [optionsLoading]="plantLocationOptionsLoading"
+              [optionsInput$]="plantLocationOptionsInput$" [(ngModel)]="selectedProjectPlantLocation">
+            </app-single-select>
+            <div *ngIf="submittedProject && !(selectedProjectPlantLocation?.locationName)"
+              class="col-md-12 form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label start-first">Customer Key</label>
+                <input id="customerKey" type="email" [readonly]="true" class="form-control" placeholder="Customer Key"
+                  formControlName="customerKey">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label w-100">Project Name <span class="mandatory">*</span>
+                <a *ngIf="submittedProject && lfProject['subdivision'].errors?.['required']"
+                  title="Project Name is required"><img src="assets/images/validation-info.svg"
+                    class="icon20px float-end"></a>
+                <a *ngIf="submittedProject && lfProject['subdivision'].errors?.['maxlength']"
+                  title="Project Name can allow maximum length 64"><img src="assets/images/validation-info.svg"
+                    class="icon20px float-end"></a>
+              </label>
+              <input id="subdivision" class="form-control"
+                [ngClass]="{'req-border': submittedProject && lfProject['subdivision'].errors }" type="text"
+                placeholder="Enter Project Name" formControlName="subdivision">
+              <div *ngIf="submittedProject && lfProject['subdivision'].errors" class="col-md-12 form-error-tf">
+                <div *ngIf="lfProject['subdivision'].errors['required']">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label class="label-block">Projected Start</label>
+            <div>
+              <dx-date-box [(value)]="projectedStartDate" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                [showClearButton]="true" placeholder="Select ProjectedStart Date">
+              </dx-date-box>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label class="label-block">Projected End<a *ngIf="errorProject.isProjectError"
+                title="End Date should be greater than Start Date"><img src="assets/images/validation-info.svg"
+                  class="icon20px"></a></label>
+            <div>
+              <dx-date-box [ngClass]="{'valid': errorProject.isProjectError}" [(value)]="projectedEndDate"
+                [openOnFieldClick]="true" [acceptCustomValue]="false" [showClearButton]="true"
+                (onValueChanged)="onChangeProjectDate($event)" placeholder="Select ProjectedEnd Date"
+                (blur)="compareProjectDates()">
+              </dx-date-box>
+            </div>
+            <div *ngIf="submittedProject && !projectedEndDate" class="form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label w-100">Address1<a
+                  *ngIf="submittedProject && lfProject['address1'].errors" title="City is required"><img
+                    src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+              <input id="subdivision" class="form-control"
+                [ngClass]="{'req-border': submittedProject && lfProject['address1'].errors }" type="text"
+                placeholder="Address1" formControlName="address1">
+              <div *ngIf="submittedProject && lfProject['address1'].errors" class="col-md-12 form-error-tf">
+                <div *ngIf="lfProject['address1'].errors['required']"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label w-100">Address2<a
+                  *ngIf="submittedProject && lfProject['address2'].errors" title="City is required"><img
+                    src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+              <input id="subdivision" class="form-control"
+                [ngClass]="{'req-border': submittedProject && lfProject['address2'].errors }" type="text"
+                placeholder="Address2" formControlName="address2">
+              <div *ngIf="submittedProject && lfProject['address2'].errors" class="col-md-12 form-error-tf">
+                <div *ngIf="lfProject['address2'].errors['required']"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label w-100">City<a
+                  *ngIf="submittedProject && lfProject['city'].errors" title="City is required"><img
+                    src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+              <input id="subdivision" class="form-control"
+                [ngClass]="{'req-border': submittedProject && lfProject['city'].errors }" type="text" placeholder="city"
+                formControlName="city">
+              <div *ngIf="submittedProject && lfProject['city'].errors" class="col-md-12 form-error-tf">
+                <div *ngIf="lfProject['city'].errors['required']"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label w-100">State <span class="mandatory">*</span>
+              <a *ngIf="submittedProject && !selectedstate || this.submittedProject && this.selectedstate.length == 0"
+                title="State is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedProject && !selectedstate || this.submittedProject && this.selectedstate.length == 0}"
+              placeholder="Select State" bindLabel="state" [minTermLength]="minLengthTerm" [trackByFn]="stateTrackByFn"
+              [getOptionLabelFn]="getstateOptionLabelFn" [options$]="stateOptions$"
+              [optionsLoading]="stateOptionsLoading" [optionsInput$]="stateOptionsInput$"
+              (onSelect)="onSelectstate($event)" [(ngModel)]="selectedstate">
+            </app-single-select>
+            <div *ngIf="submittedProject && !selectedstate || this.submittedProject && this.selectedstate.length == 0"
+              class="col-md-12 form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label w-100">zip
+                <a *ngIf="submittedProject && lfProject['zip'].errors?.['maxlength']"
+                  title="Please Enter Maximum 5 numbers"><img src="assets/images/validation-info.svg"
+                    class="icon20px"></a>
+              </label>
+
+              <input id="subdivision" class="form-control"
+                [ngClass]="{'req-border': submittedProject && lfProject['zip'].errors }" type="text" placeholder="Zip"
+                formControlName="zip">
+              <div *ngIf="submittedProject && lfProject['zip'].errors" class="col-md-12 form-error-tf">
+                <div *ngIf="lfProject['zip'].errors['maxlength']"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label w-100">County <span class="mandatory">*</span>
+              <a *ngIf="submittedProject && !selectedcounty || this.submittedProject && this.selectedcounty.length == 0"
+                title="County is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedProject && !selectedcounty || this.submittedProject && this.selectedcounty.length == 0}"
+              placeholder="Select County" bindLabel="county" [minTermLength]="minLengthTerm"
+              [trackByFn]="countyTrackByFn" [getOptionLabelFn]="getcountyOptionLabelFn" [options$]="countyOptions$"
+              [optionsLoading]="countyOptionsLoading" [optionsInput$]="countyOptionsInput$"
+              (onSelect)="onSelectCounty($event)" [(ngModel)]="selectedcounty">
+            </app-single-select>
+            <div *ngIf="submittedProject && !selectedcounty || this.submittedProject && this.selectedcounty.length == 0"
+              class="col-md-12 form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label w-100">Sales Representative <span class="mandatory">*</span>
+              <a *ngIf="submittedProject && !selectedsalesRep || this.submittedProject && this.selectedsalesRep.length == 0"
+                title="Sales Representative is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedProject && !selectedsalesRep || this.submittedProject && this.selectedsalesRep.length == 0}"
+              placeholder="Select SalesRepresentative" bindLabel="smaN_NAME" [minTermLength]="minLengthTerm"
+              [trackByFn]="salesRepTrackByFn" [getOptionLabelFn]="getSalesRepOptionLabelFn"
+              [options$]="salesRepOptions$" [optionsLoading]="salesRepOptionsLoading"
+              [optionsInput$]="salesRepOptionsInput$" (onSelect)="onSelectSalesRep($event)"
+              [(ngModel)]="selectedsalesRep">
+            </app-single-select>
+            <div
+              *ngIf="submittedProject && !selectedsalesRep || this.submittedProject && this.selectedsalesRep.length == 0"
+              class="col-md-12 form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label">Sales Representative
+                Email</label>
+              <input id="salesRepEmail" type="email" [readonly]="true" class="form-control"
+                placeholder="Enter SalesRepresentative Email" formControlName="salesRepEmail">
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label w-100">Status <span class="mandatory">*</span>
+              <a *ngIf="submittedProject && !selectedprojectStatus || this.submittedProject && this.selectedprojectStatus.length == 0"
+                title="Status is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedProject && !selectedprojectStatus || this.submittedProject && this.selectedprojectStatus.length == 0}"
+              placeholder="Select Status" bindLabel="activestatus" [minTermLength]="minLengthTerm"
+              [trackByFn]="statusTrackByFn" [getOptionLabelFn]="getprojectstatusOptionLabelFn"
+              [options$]="projectStatusOptions$" [optionsLoading]="projectStatusOptionsLoading"
+              [optionsInput$]="projectStatusOptionsInput$" [(ngModel)]="selectedprojectStatus"
+              (onSelect)="onSelectStatus($event)">
+            </app-single-select>
+            <div
+              *ngIf="submittedProject && !selectedprojectStatus || this.submittedProject && this.selectedprojectStatus.length == 0"
+              class="col-md-12 form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label">Bill To
+            </label>
+            <app-single-select placeholder="Select BillTo" bindLabel="cusT_NAME" [minTermLength]="minLengthTerm"
+              [trackByFn]="getBillToTrackByFn" [getOptionLabelFn]="getBillToCustomerOptionLabelFn"
+              [options$]="billToCustomerOptions$" [optionsLoading]="billToCustomerOptionsLoading"
+              [optionsInput$]="billToCustomerOptionsInput$" [(ngModel)]="selectedBillToCustomer">
+            </app-single-select>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label class="label-block w-100">Job Type <span class="mandatory">*</span>
+              <a *ngIf="submittedProject && !selectedProjectType || submittedProject&&selectedProjectType?.length == 0"
+                title="Job Type is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedProject && !selectedProjectType || submittedProject&&selectedProjectType?.length == 0}"
+              placeholder="Select JobType" bindLabel="type" [minTermLength]="minLengthTerm"
+              [trackByFn]="jobTypeTrackByFn" [getOptionLabelFn]="getJobTypeOptionLabelFn" [options$]="jobTypeOptions$"
+              [optionsLoading]="jobTypeOptionsLoading" [optionsInput$]="jobTypeOptionsInput$"
+              (onClear)="onClearProjectType($event)" (onSelect)="onSelectProjectJobType($event)"
+              [(ngModel)]="selectedProjectType">
+            </app-single-select>
+            <div *ngIf="submittedProject && !selectedProjectType || submittedProject&&selectedProjectType?.length == 0"
+              class="form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label class="label-block w-100">Classification <span class="mandatory">*</span> <a
+                *ngIf="submittedProject && !selectedProjectClassification || submittedProject&&selectedProjectClassification?.length == 0"
+                title="Classification is required"><img src="assets/images/validation-info.svg"
+                  class="icon20px float-end"></a></label>
+            <app-single-select
+              [ngClass]="{'select': submittedProject && !selectedProjectClassification || submittedProject&&selectedProjectClassification?.length == 0}"
+              placeholder="Select Classification" bindLabel="class" [minTermLength]="minLengthTerm"
+              [trackByFn]="jobClassificationTrackByFn" [getOptionLabelFn]="getJobClassificationOptionLabelFn"
+              [options$]="jobClassificationOptions$" [optionsLoading]="jobClassificationOptionsLoading"
+              [optionsInput$]="jobClassificationOptionsInput$" [(ngModel)]="selectedProjectClassification"
+              (onSelect)="onSelectProjectClassification($event)" (onClear)="onClearProjectClassification($event)">
+            </app-single-select>
+            <div
+              *ngIf="submittedProject && !selectedProjectClassification || submittedProject&&selectedProjectClassification?.length == 0"
+              class="form-error-tf">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm">
+            <div class="mb-3">
+              <label class="label-block profix">Product Type</label>
+              <div class="input-group">
+                <input id="job_Type" type="text" [readonly]="true" class="form-control" placeholder="Product Type"
+                  formControlName="job_Type">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label w-100">Latitude
+                <a *ngIf="lfProject['lat'].errors?.['pattern']" title=" Please enter a number"><img
+                    src="assets/images/validation-info.svg" class="icon20px"></a>
+              </label>
+              <input id="subdivision" class="form-control" placeholder="Latitude" formControlName="lat">
+
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm" (ngSubmit)="onSubmitProject()">
+            <div class="mb-3">
+              <label for="exampleDataList" class="form-label w-100">Longitude
+                <a *ngIf="lfProject['long'].errors?.['pattern']" title=" Please enter a number"><img
+                    src="assets/images/validation-info.svg" class="icon20px"></a>
+              </label>
+              <input id="Longitude" class="form-control" placeholder="Longitude" formControlName="long">
+
+            </div>
+          </form>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm">
+            <div class="mb-3">
+              <label class="label-block">Project Notes</label>
+              <textarea class="form-control" placeholder="Leave a comment here" id="notes"
+                formControlName="notes"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+          <form [formGroup]="createprojectForm">
+            <label for="firstName" class="col-sm-4 col-form-label"></label>
+            <div class="col-sm-8 p-2">
+              <div class="form-check form-switch p-0" style="margin-left:20px">
+                <span class="toggle">Web Scheduler Active</span>
+                <input formControlName="active" class="form-check-input" id="active" type="checkbox">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="section-devider">
+          <div class="float-end"><button type="button" (click)="onClickProjectCancel()"
+              class="btn btn-outline-dark m-2 no-border-radius">Cancel</button>
+            <button type="submit" class="btn btn-primary m-2" (click)="onSubmitProject()">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Create contact Form --->
+    <div class="row mt-4 cusContactForm" *ngIf="AddContact">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h2 class="title-v1">Create Contact</h2>
+      </div>
+      <div class="row mt-2">
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Job Title</label>
+                <input id="title" class="form-control" type="text" formControlName="title" placeholder="Job Title">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <label for="exampleDataList" class="form-label w-100">First Name <span class="mandatory">*</span>
+                <a *ngIf="submittedContact && lfContact['first_Name'].errors" title="First Name is required"><img
+                    src="assets/images/validation-info.svg" class="icon20px float-end"></a></label>
+              <input id="first_Name" class="form-control"
+                [ngClass]="{'req-border': submittedContact && lfContact['first_Name'].errors }" type="text"
+                formControlName="first_Name" placeholder="First Name">
+              <div *ngIf="submittedContact && lfContact['first_Name'].errors" class="form-error-tf">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <label for="exampleDataList" class="form-label w-100">Last Name <span class="mandatory">*</span>
+                <a *ngIf="submittedContact && lfContact['last_Name'].errors" title="Last Name is required"><img
+                    src="assets/images/validation-info.svg" class="icon20px float-end"></a> </label>
+              <input id="last_Name" class="form-control"
+                [ngClass]="{'req-border': submittedContact && lfContact['last_Name'].errors }" type="text"
+                formControlName="last_Name" placeholder="Last Name">
+              <div *ngIf="submittedContact && lfContact['last_Name'].errors" class="form-error-tf">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <label for="exampleDataList" class="form-label">Default Contact </label>
+            <app-multi-select placeholder="Select DefaultContact" bindLabel="defaultBid" [searchable]="true"
+              typeToSearchText="Search DefaultContact" [minTermLength]="minLengthTerm" [maxSelectedItems]="3"
+              [trackByFn]="defaultContactTrackByFn" [getOptionLabelFn]="getDefaultContactOptionLabelFn"
+              [options$]="defaultContactOptions$" [optionsLoading]="defaultContactOptionsLoading"
+              [optionsInput$]="defaultContactOptionsInput$" [(ngModel)]="selectedDefaultContact">
+            </app-multi-select>
+            <div
+              *ngIf="submittedContact && !selectedDefaultContact || submittedContact&&selectedDefaultContact?.length == 0"
+              class="form-error-tf"></div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <label for="exampleDataList" class="form-label w-100">Email <span class="mandatory">*</span>
+                <a *ngIf="submittedContact && lfContact['email_Address'].errors?.['email']"
+                  title="Please Enter a Valid Email"><img src="assets/images/validation-info.svg" class="icon20px"></a>
+                <a *ngIf="submittedContact && lfContact['email_Address'].errors?.['required']"
+                  title="Email is required"><img src="assets/images/validation-info.svg" class="icon20px float-end"></a>
+              </label>
+              <input id="email_Address" class="form-control"
+                [ngClass]="{'req-border': submittedContact && lfContact['email_Address'].errors?.['required']}"
+                type="text" formControlName="email_Address" placeholder="Email">
+              <div *ngIf="submittedContact && lfContact['email_Address'].errors" class="form-error-tf">
+                <div *ngIf="lfContact['email_Address'].errors['email']">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Mobile Number
+                  <a *ngIf="submittedContact && lfContact['office_Mobile'].errors?.['minlength']"
+                    title="Please Enter minimum 10 numbers"><img src="assets/images/validation-info.svg"
+                      class="icon20px"></a>
+                </label>
+                <input id="office_Mobile" class="form-control" type="text"
+                  [ngClass]="{'req-border': submittedContact && lfContact['office_Mobile'].errors?.['minlength']}"
+                  (keyup)="onKeyUpEvent($event,'Mobile')" formControlName="office_Mobile" placeholder="Mobile Number">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Office Number
+                  <a *ngIf="submittedContact && lfContact['office_Phone'].errors?.['minlength']"
+                    title="Please Enter minimum 10 numbers"><img src="assets/images/validation-info.svg"
+                      class="icon20px"></a>
+                </label>
+                <input id="office_Phone" class="form-control" type="text"
+                  [ngClass]="{'req-border': submittedContact && lfContact['office_Phone'].errors?.['minlength']}"
+                  (keyup)="onKeyUpEvent($event,'Phone')" formControlName="office_Phone" placeholder="Office Number">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">Fax
+                  <a *ngIf="submittedContact && lfContact['office_Fax'].errors?.['minlength']"
+                    title="Please Enter minimum 10 numbers"><img src="assets/images/validation-info.svg"
+                      class="icon20px"></a>
+                </label>
+                <input id="office_Fax" class="form-control" type="text"
+                  [ngClass]="{'req-border': submittedContact && lfContact['office_Fax'].errors?.['minlength']}"
+                  (keyup)="onKeyUpEvent($event,'Fax')" formControlName="office_Fax" placeholder="Fax">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">
+                  Address Line1</label>
+                <input id="addr1" class="form-control" type="text" formControlName="addr1" placeholder="Address Line1">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">
+                  Address Line2</label>
+                <input id="addr2" class="form-control" type="text" formControlName="addr2" placeholder="Address Line2">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-xs-12 col-xxl-2">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <div class="mb-3">
+                <label for="exampleDataList" class="form-label">
+                  City,State Zip</label>
+                <input id="addr3" class="form-control" type="text" formControlName="addr3" placeholder="City,State Zip">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6  col-xxl-2 col-xs-12">
+          <div class="mb-3">
+            <form [formGroup]="createcontactForm" (ngSubmit)="OnsubmitContact()">
+              <label for="exampleDataList" class="form-label">Comments</label>
+              <textarea id="c_comments" class="form-control" formControlName="c_comments" form
+                placeholder="Leave a comment here"></textarea>
+            </form>
+          </div>
+        </div>
+        <div class="section-devider">
+          <div class="float-end"><button type="button" (click)="onClickCancel()"
+              class="btn btn-outline-dark m-2 no-border-radius">Cancel</button>
+            <button type="submit" class="btn btn-primary m-2" (click)="OnsubmitContact()">Create</button>
+          </div>
+        </div>
+      </div>
+      <!-- create contact end form -->
+    </div>
+    <div class="card mt-2">
+      <div class="card-header">
+        Additional Customer(s) Bidding
+      </div>
+      <button type="button" class="btn btn-outline-dark mt-3 ms-3 button-width" data-bs-toggle="modal"
+        data-bs-target="#CustomerModal" (click)="onClickAddCustomers()" title="Add customer">
+        <i class="fas fa-plus"></i>&nbsp; <span class="ml-3">
+          Customer</span>
+      </button>
+      <div class="card-body">
+        <div class="demo-container">
+          <dx-data-grid #salesGrid id="gridContainer" [dataSource]="customers" [showBorders]="true">
+            <!-- <dxo-editing mode="cell" [allowAdding]="true" [useIcons]="true">
+            </dxo-editing> -->
+            <dxi-column dataField="AddCustomerName" caption="Customer Key">
+              <!-- <dxo-lookup valueExpr="customerKey" displayExpr="customerKey">
+              </dxo-lookup>
+              <dxi-validation-rule type="required"></dxi-validation-rule> -->
+            </dxi-column>
+            <dxi-column dataField="Status" caption="Status"></dxi-column>
+            <dxi-column dataField="SalesRepresentative" caption="Customer Sales Representative"></dxi-column>
+            <dxi-column dataField="MobileNumber" caption="Mobile Number"></dxi-column>
+            <dxi-column dataField="Email" caption="Email"></dxi-column>
+            <dxi-column dataField="BidSalesRepresentative" caption="Bid Sales Representative"></dxi-column>
+            <dxi-column dataField="ProjectSalesRepresentative" caption="Project Sales Representative"></dxi-column>
+            <dxi-column caption="Actions" [allowHiding]="false" type="buttons" [allowFixing]="true" [fixed]="true"
+              fixedPosition="right">
+              <dxi-button hint="Delete" icon="trash" [onClick]="onClickDeleteAddCustomer">
+              </dxi-button>
+            </dxi-column>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2" [class.opacity0]='AddCustomer ||AddProject || AddContact' style="clear:both">
+    <div class="text-end"><button type="button" class="btn btn-outline-dark m-2 no-border-radius"
+        (click)="OnCancelBid()">Cancel</button>
+      <button type="button" class="btn btn-primary m-2 " (click)="OnsubmitBid()">Create</button>
+    </div>
+  </div>
+</main>
+<div class="modal fade" id="CustomerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Additional Bidding Customers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="handleCloseButtonClick()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="demo-container datagrid-wrapper custom-datagrid-pager-exists">
+          <dx-data-grid #customerGrid [height]="dataGridHeight" [(selectedRowKeys)]=" selectedCustomerBidder"
+            [dataSource]="dataSource" keyExpr="reC_ID" noDataText="No Customers Found"
+            (onExporting)="onExporting($event)" [remoteOperations]="false" [renderAsync]="true"
+            (onContentReady)="onContentReady($event)">
+            <dxo-export [enabled]="true"></dxo-export>
+            <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true" [mode]="columnChooserModes[1].key">
+              <dxo-position my="right top" at="right bottom" of=".dx-datagrid-column-chooser-button"></dxo-position>
+            </dxo-column-chooser>
+            <!-- <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState" [customSave]="saveState">
+</dxo-state-storing> -->
+            <!--  -->
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-search-panel [visible]="true" [width]="240" [text]="searchResult" placeholder="Search...">
+            </dxo-search-panel>
+            <dxo-toolbar>
+              <dxi-item name="columnChooserButton"></dxi-item>
+              <dxi-item name="exportButton"></dxi-item>
+              <dxi-item name="resetButton">
+                <dx-button [disabled]="isUndo" icon="undo" hint="Reset All" class="ms-1" (click)="onClickResetCancel()">
+                </dx-button>
+              </dxi-item>
+              <dxi-item name="searchPanel"></dxi-item>
+            </dxo-toolbar>
+            <dxi-column caption="Customer Name" dataField="cusT_NAME" [allowHeaderFiltering]="false"
+              [allowReordering]="true" selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+            <dxi-column caption="Customer Key" dataField="cusT_KEY" [allowHeaderFiltering]="false"
+              [allowReordering]="true" selectedFilterOperation="contains" [editorOptions]="editorOptions">
+            </dxi-column>
+            <dxi-column caption="Sales Representative" dataField="customer" [allowHeaderFiltering]="false"
+              [allowReordering]="true" selectedFilterOperation="contains" [editorOptions]="editorOptions"></dxi-column>
+            <dxi-column caption="Status" dataField="cust_status" [calculateDisplayValue]="getCustomerStatus"
+              dataType="boolean" [allowSorting]="false" [allowHeaderFiltering]="false" [allowFiltering]="true"
+              [allowReordering]="true" [allowSearch]="false">
+              <dxo-lookup [dataSource]="statusLookupData" valueExpr="value" displayExpr="text"></dxo-lookup>
+            </dxi-column>
+            <dxi-column caption="Terms" dataField="terms" [allowHeaderFiltering]="false" [allowReordering]="true"
+              selectedFilterOperation="contains" [editorOptions]="editorOptions"></dxi-column>
+            <dxi-column caption="City,State Zip" dataField="bilL_ADDR3" [allowHeaderFiltering]="false"
+              selectedFilterOperation="contains" [editorOptions]="editorOptions"></dxi-column>
+            <dxo-selection mode="single" showCheckBoxesMode="always">
+            </dxo-selection>
+            <dxo-scrolling mode="virtual" [renderAsync]="false">
+            </dxo-scrolling>
+            <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+            <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items">
+            </dxo-pager>
+          </dx-data-grid>
+          <div class="custom-datagrid-pager-wrapper" *ngIf="gridCount">
+            <app-single-select placeholder="Select Page Size" [clearable]="false" [trackByFn]="pageSizeTrackByFn"
+              [getOptionLabelFn]="getPageSizeOptionLabelFn" [options]="pageSizeOptions" (onSelect)="onSelectPageSize()"
+              [(ngModel)]="selectedPageSize">
+            </app-single-select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="onClickSelect()" class="btn btn-primary" data-bs-dismiss="modal"
+          [disabled]="!selectedCustomerBidder">Select</button>
+      </div>
+    </div>
+  </div>
+</div>

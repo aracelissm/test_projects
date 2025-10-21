@@ -1,0 +1,182 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <div class="">
+        <h1>Time to Batch PANELS</h1>
+
+        <div class="demo-container">
+            <dx-data-grid [height]="500" id="gridContainer" [(selectedRowKeys)]="selectedKeys" [dataSource]="dataSource"
+                [showBorders]="true" [showRowLines]="true" noDataText="No Data Found" keyExpr="recId"
+                [allowColumnResizing]="true" (onSelectionChanged)="batchSelectedValidator()"
+                (onExporting)="onExporting($event)">
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true"
+                    [mode]="columnChooserModes[1].key">
+                    <dxo-position my="right top" at="right bottom"
+                        of=".dx-datagrid-column-chooser-button"></dxo-position>
+                </dxo-column-chooser>
+                <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+                <dxo-sorting mode="multiple"></dxo-sorting>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-search-panel [visible]="true" [width]="240" [text]="searchResult"
+                    placeholder="Search..."></dxo-search-panel>
+                <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState"
+                    [customSave]="saveState"></dxo-state-storing>
+                <dxo-toolbar>
+                    <dxi-item location="before">
+                        <dx-button text="Clear Selection" [disabled]="!selectedKeys.length"
+                            (onClick)="dataGrid.instance.clearSelection()">
+                        </dx-button>
+                    </dxi-item>
+                    <dxi-item name="columnChooserButton"></dxi-item>
+                    <dxi-item name="exportButton"></dxi-item>
+                    <dxi-item>
+                        <div *dxTemplate>
+                            <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetState()">
+                            </dx-button>
+                        </div>
+                    </dxi-item>
+                    <dxi-item name="searchPanel"></dxi-item>
+                </dxo-toolbar>
+                <dxi-column type="selection" [fixed]="true"></dxi-column>
+                <dxi-column caption="Tag" dataField="jiTag" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Mark" dataField="jiMark" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Order" dataField="jiMarkOrder" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Qty" dataField="jiQuant" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Length" dataField="jiSpan" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Description" dataField="jiItemDesc" [allowSorting]="true" [allowFiltering]="true"
+                    [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Cost" [calculateCellValue]="calculateCost" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxo-selection mode="multiple" showCheckBoxesMode="always">
+                </dxo-selection>
+                <dxo-scrolling mode="virtual" [renderAsync]="false"> </dxo-scrolling>
+                <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+                <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+            </dx-data-grid>
+        </div>
+
+        <div class="input-display-container">
+            <div *ngIf="batchData != undefined">
+                <div class="batchHeading">WorkOrders</div>
+                <div class="batchLineItem" *ngFor="let item of batchDataWorkOrders">
+                    <i class="dx-icon-tags"> </i> {{item.name }}: {{item.count}}
+                </div>
+
+                <div class="batchHeading">Cuts</div>
+                <div class="batchLineItem"><i class="dx-icon-runner"> </i> Lumber Fetch: {{batchData.totalLumberFetch}}
+                </div>
+                <div class="batchLineItem"><i class="dx-icon-preferences"> </i> Total Piece Cuts:
+                    {{batchData.totalPieceCuts}}</div>
+
+                <div class="batchHeading">Assembly</div>
+                <div class="batchLineItem"><i class="dx-icon-runner"> </i> Plate Fetch: {{batchData.totalPlateFetch}}
+                </div>
+                <div class="batchLineItem"><i class="dx-icon-product"> </i> Total Trusses: {{batchData.totalTrusses}}
+                </div>
+                <div class="batchLineItem"><i class="dx-icon-product"> </i> Total Pieces: {{batchData.totalTrussPieces}}
+                </div>
+            </div>
+
+            <div class="input-controls">
+                <div class="input-controls-col1">
+                    <form [formGroup]="batchingInputGroup">
+                        <!-- <div class="row mb-3">
+                            <label for="exampleDataList" class="form-label w-100">Location <span
+                                    class="mandatory">*</span><a *ngIf="!(selectedPlantLocation?.locationName)"
+                                    title="Location is required"><img src="assets/images/validation-info.svg"
+                                        class="icon20px float-end"></a></label>
+                            <app-single-select [clearable]="false"
+                                [ngClass]="{'select': !(selectedPlantLocation?.locationName)}"
+                                placeholder="Search Plant Location" bindLabel="locationName" [searchable]="true"
+                                typeToSearchText="Search Plant Location" [minTermLength]="minLengthTerm"
+                                [trackByFn]="plantLocationTrackByFn" [getOptionLabelFn]="getPlantLocationOptionLabelFn"
+                                [options$]="plantLocationOptions$" [optionsLoading]="plantLocationOptionsLoading"
+                                [optionsInput$]="plantLocationOptionsInput$" [(ngModel)]="selectedPlantLocation"
+                                >
+                            </app-single-select>
+                        </div> -->
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" (ngModelChange)="batchSelectedValidator()" class="form-check-input"
+                                    [ngClass]="{'req-border': showSelectedJobItemsError }" formControlName="batchType"
+                                    value="All" />
+                                Batch All Items
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" (ngModelChange)="batchSelectedValidator()" class="form-check-input"
+                                    [ngClass]="{'req-border':showSelectedJobItemsError }" formControlName="batchType"
+                                    value="Selected" />
+                                Batch
+                                Selected Items
+                                <a *ngIf="showSelectedJobItemsError" title="No job items selected">
+                                    <img src="assets/images/validation-info.svg" class="icon20px">
+                                </a>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="input-controls-col2">
+                    <form [formGroup]="batchingInputGroup">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="stdStudsCombined" />
+                                Std Studs in single WO
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="excludeStdStuds" />
+                                Exclude Std Studs
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="panelPlatesCombined" />
+                                Combine Panel and Plates
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="similarPiecesLabels" />
+                                Different labels for similar pieces
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" formControlName="excludeVtp" />
+                                ExcludeVTP
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!batchSummaryInited">
+            (Checking Batch Summary - Loading)
+        </div>
+        <button [ngClass]="'btn btn-primary m-2 ' + (this.canClearbatch() ? '' : 'disabled')"
+            (click)="clearBatch()">Clear
+            Batch</button>
+        <button [ngClass]="'btn btn-primary m-2 ' + (this.canTriggerBatch() ? '' : 'disabled')"
+            *ngIf="!this.batchInProgress" class="btn btn-primary m-2" (click)="triggerBatch()">Start Batch</button>
+        <button *ngIf="this.batchInProgress" class="btn btn-primary m-2">Batching In progress</button>
+        <p *ngIf="this.batchInProgress">Batching takes a moment. Please do not navigate away from this page.</p>
+    </div>
+</main>

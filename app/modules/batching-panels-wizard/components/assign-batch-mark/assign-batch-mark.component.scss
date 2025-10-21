@@ -1,0 +1,102 @@
+.above-grid {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    //border: 2px solid #f30909;
+}
+
+.grids-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.diagram-container-left {
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid #696969;
+    //max-height: 150px;
+    align-self: flex-start;
+}
+
+.diagram-container-right {
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid #696969;
+    //max-height: 150px;
+    align-self: flex-end;
+}
+
+.unmarked-grid {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    justify-content: flex-start;
+
+    h3 {
+        margin-top: 2rem;
+    }
+
+    dx-data-grid {
+        height: 500px !important;
+    }
+}
+
+.marked-grid {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    justify-content: flex-start;
+
+    h3 {
+        margin-top: 2rem;
+    }
+
+    dx-data-grid {
+        height: 500px !important;
+    }
+}
+
+.assign-mark-container {
+    display: flex;
+}
+
+.truss-image-container {
+    margin: auto;
+    width: 50rem;
+    height: 10rem;
+    padding: 10px;
+    background-color: black;
+}
+
+.assign-mark-controls {
+    display: flex;
+    width: 10%;
+    justify-content: center;
+}
+
+.assign-mark-controls-column {
+    display: flex;
+    flex-direction: column;
+    height: 25rem;
+    margin-top: 13.8rem;
+}
+
+.input-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 6rem;
+}
+
+.input-control {
+    margin: 10px 0px;
+
+    input {
+        width: 6rem;
+    }
+}
+
+.wizard-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+}

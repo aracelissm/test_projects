@@ -1,0 +1,81 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <div class="assign-mark-container">
+        <div class="unmarked-grid datagrid-wrapper custom-datagrid-pager-exists">
+            <dx-data-grid [height]="dataGridHeight" [style.min-height.px]="500" [dataSource]="dataSource"
+                [showBorders]="true" [showRowLines]="true" noDataText="No Data Found" [allowColumnResizing]="true"
+                (onExporting)=" onExporting($event)" (onSaving)="onSaving($event)">
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true"
+                    [mode]="columnChooserModes[1].key">
+                    <dxo-position my="right top" at="right bottom"
+                        of=".dx-datagrid-column-chooser-button"></dxo-position>
+                </dxo-column-chooser>
+                <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+                <dxo-sorting mode="multiple"></dxo-sorting>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-search-panel [visible]="true" [width]="240" [text]="searchResult"
+                    placeholder="Search..."></dxo-search-panel>
+                <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState"
+                    [customSave]="saveState"></dxo-state-storing>
+                <dxo-toolbar>
+                    <dxi-item name="saveButton"></dxi-item>
+                    <dxi-item>
+                        <div *dxTemplate>
+                            <dx-button icon="undo" hint="Reset State" class="me-1" (click)="resetState()">
+                            </dx-button>
+                        </div>
+                    </dxi-item>
+                    <dxi-item name="columnChooserButton"></dxi-item>
+                    <dxi-item name="exportButton"></dxi-item>
+                    <dxi-item name="searchPanel"></dxi-item>
+                </dxo-toolbar>
+                <dxo-editing mode="batch" [allowUpdating]="true" [allowAdding]="false" [allowDeleting]="false"
+                    [selectTextOnEditStart]="true" [startEditAction]="'click'">
+                </dxo-editing>
+                <dxo-keyboard-navigation [editOnKeyPress]="true" [enterKeyAction]="'startEdit'"
+                    [enterKeyDirection]="'column'">
+                </dxo-keyboard-navigation>
+                <dxi-column caption="Truss" dataField="jiItemDesc" [allowEditing]="false" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Type" dataField="type" [allowEditing]="false" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Ply" dataField="jiNumPly" [allowEditing]="false" alignment="left"
+                    [allowSorting]="true" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                    [allowReordering]="true" [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Mark" dataField="jiBmark" [allowEditing]="false" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions"></dxi-column>
+                <dxi-column caption="Qty" dataField="jiQuant" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions">
+                </dxi-column>
+                <dxi-column caption="Bundles" dataField="bundle" alignment="left" [allowSorting]="true"
+                    [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                    [editorOptions]="editorOptions">
+                </dxi-column>
+                <dxo-scrolling mode="virtual" rowRenderingMode="virtual" [renderAsync]="false"> </dxo-scrolling>
+                <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+                <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+            </dx-data-grid>
+            <div class="custom-datagrid-pager-wrapper" *ngIf="gridCount">
+                <app-single-select placeholder="Select Page Size" [clearable]="false" [trackByFn]="pageSizeTrackByFn"
+                    [getOptionLabelFn]="getPageSizeOptionLabelFn" [options]="pageSizeOptions"
+                    (onSelect)="onSelectPageSize()" [(ngModel)]="selectedPageSize">
+                </app-single-select>
+            </div>
+        </div>
+    </div>
+    <div class="wizard-nav-buttons">
+        <button type="button" class="btn btn-primary m-2" (click)="previous()">{{currentStep.previousButtonText}}
+        </button>
+        <button type="button" *ngIf="!currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="next()">{{currentStep.nextButtonText}}
+        </button>
+        <button type="button" *ngIf="currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="completeBatching()">{{currentStep.nextButtonText}}
+        </button>
+    </div>
+</main>

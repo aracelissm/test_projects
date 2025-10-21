@@ -1,0 +1,23 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <div class="">
+        <h1>Print Labels</h1>
+
+        <button class="btn btn-primary m-2" (click)="printRoofLabels()">Print Roof
+            Labels({{batchPrintSummary.roofLabelCnt}})</button>
+        <button class="btn btn-primary m-2" (click)="printFloorLabels()">Print Floor
+            Labels({{batchPrintSummary.floorLabelCnt}})</button>
+        <button class="btn btn-primary m-2" (click)="onClickOpenBatchSummaryReport()">Print All Batches</button>
+        <button class="btn btn-primary m-2" (click)="onClickOpenShopDrawingReport()">Shop Drawing</button>
+        <button class="btn btn-primary m-2" (click)="onClickOpenLaserCutReport()">LaserCut</button>
+    </div>
+    <div class="wizard-nav-buttons">
+        <button type="button" class="btn btn-primary m-2" (click)="previous()">{{currentStep.previousButtonText}}
+        </button>
+        <button type="button" *ngIf="!currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="next()">{{currentStep.nextButtonText}}
+        </button>
+        <!-- <button type="button" *ngIf="currentStep.isLastStep" [disabled]="!isComplete" class="btn btn-primary m-2"
+            (click)="completeBatching()">{{currentStep.nextButtonText}}
+        </button> -->
+    </div>
+</main>

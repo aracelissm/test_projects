@@ -1,0 +1,61 @@
+.batchLineItem {
+    color: rgb(4, 39, 39);
+    padding-left: 12px
+}
+
+.batchHeading {
+    font-size: medium;
+}
+
+.input-display-container {
+    display: flex;
+    column-gap: 10em;
+    flex-wrap: wrap;
+}
+
+.input-controls {
+    display: flex;
+    column-gap: 50px;
+    flex-wrap: wrap;
+}
+
+.batch-target {
+    font-weight: bold;
+}
+
+.batch-mark-status-container {
+    border-radius: 2px;
+    border-color: black;
+    border-style: double;
+}
+
+.batch-mark-status-title {
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: medium;
+    padding-top: 5px;
+}
+
+.bg-dark-batch-mark-batch-batchedinshop {
+    color: green !important;
+}
+
+.bg-dark-batch-mark-batch-batched {
+    color: white !important;
+}
+
+.bg-dark-batch-mark-batch-empty {
+    color: red !important;
+}
+
+.batch-mark-batch-batchedinshop {
+    color: green;
+}
+
+.batch-mark-batch-batched {
+    color: black;
+}
+
+.batch-mark-batch-empty {
+    color: red;
+}

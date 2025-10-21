@@ -1,0 +1,10 @@
+<main id="report-result" class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+    <div class="pdf-download-button-container">
+        <button id="pdf-download-button-id" class="pdf-download-button"
+            *ngIf="pdfSource !== null && pdfSource !== undefined && pdfSource !== ''" (click)="download()"><img
+                src="assets/images/download.svg" /></button>
+    </div>
+    <pdf-viewer class="pdf-viewer" [src]="pdfSource" [original-size]='false' [show-borders]='true'></pdf-viewer>
+    <dx-load-panel [position]="{ of: '#report-result' }" [visible]="loadingPanelVisible" [showIndicator]="true"
+        [showPane]="true" [shading]="false" [hideOnOutsideClick]="false"></dx-load-panel>
+</main>
