@@ -1,0 +1,61 @@
+interface Map {
+    [key: string]: string | undefined;
+}
+
+export const JobExceptionDetails: Map = {
+    AH: 'Project On Hold',
+    SE: 'Span Over 50',
+    A: 'No Project',
+    B: 'Confirm Empty',
+    // B : 'Confirm Greater 20 Days',
+    C: 'Job Not Layout Approved',
+    D: 'No Master Defined',
+    F: 'Master Not Layout Approved',
+    E: 'Invalid Master Number',
+    G: 'Lot Info Not Verified',
+    T: 'No County Set',
+    // T : 'No Base Tax Set',
+    I1: 'No Contract Dates',
+    H: 'No Sales Agreement',
+    I: 'Incomplete Po Info',
+    H1: 'Contract Greater 60 Days',
+    J: 'Lot Spec Not Appr',
+    J1: 'No Customer Approval Date',
+    J2: 'No Design Approval Date',
+    K: 'Prices Not Locked',
+    P: 'Pricelock Greater 30 Days',
+    PP: 'Prepay',
+    L: 'Units Not Entered',
+    M: 'Preliminary Pricing',
+    X: 'Engineered Pricing Not Updated',
+    Y: 'Engineered Pricing Greater Sold+5%/ 15%'
+};
+
+export const JobExceptionLogo: Map = {
+    AH: 'je-project-on-hold',
+    SE: 'je-span-over-50',
+    A: 'je-no-project',
+    B: 'je-confirm-empty',
+    // B : 'je-confirm-greater-20-days',
+    C: 'je-job-not-layout-approved',
+    D: 'je-no-master-defined',
+    F: 'je-master-not-layout-approved',
+    E: 'je-invalid-master-number',
+    G: 'je-lot-info-not-verified',
+    T: 'je-no-county-set',
+    // T : 'je-no-base-tax-set',
+    I1: 'je-no-contract-dates',
+    H: 'je-no-sales-agrmnt',
+    I: 'je-incomplete-po-info',
+    H1: 'je-contract-greater-60-days',
+    J: 'je-lot-spec-not-appr',
+    J1: 'je-no-customer-approval-date',
+    J2: 'je-no-design-approval-date',
+    K: 'je-prices-not-locked',
+    P: 'je-pricelock-greater-30-days',
+    PP: 'je-prepay',
+    L: 'je-units-not-entered',
+    M: 'je-preliminary-pricing',
+    X: 'je-engineered-pricing-not-updated',
+    Y: 'je-engineered-pricing-greater-sold-5p-15p'
+};
