@@ -1,0 +1,25 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4 p-3">
+    <!-- <div class="row">
+        <h2 class="title-v1">Back Plating
+        </h2>
+    </div> -->
+    <div class="col-md-12 col-lg-12 col-xxl-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                Back Plating
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <app-active-work-order [activeWorkOrder]="activeWorkOrder"></app-active-work-order>
+                    </div>
+                    <div class="col-6">
+                        <app-list-work-orders (selectedWorkOrder)="getSelectedWorkOrder($event)"></app-list-work-orders>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,39 @@
+<main>
+    <section class="auth-section-bg">
+        <div class="container">
+            <div class="form-auth">
+                <form [formGroup]="emailVerificationForm" (ngSubmit)="onSubmitEmailVerificationForm()">
+                    <img class="mb-2 logosvg" src="assets/images/IPSlogo-login.svg" alt="">
+                    <p>Viper Management Solutions ®</p>
+                    <h2 class="h3 mb-3 fw-normal">Email Verification</h2>
+                    <div class="form-floating  mb-3">
+                        <p> <strong> Email has not been verified Yet</strong></p>
+                        Please check your Email or just enter your Email Address below to receive the Email
+                        Verification link again.
+                    </div>
+                    <div class="form-floating">
+                        <input type="email" formControlName="email" class="form-control login-tf-border-height"
+                            placeholder="Enter" [ngClass]="{ 'is-invalid': submitted && lf['email'].errors }">
+                        <label for="floatingInput">Email / User ID </label>
+                    </div>
+                    <div *ngIf="submitted && lf['email'].errors" class="invalid-feedback">
+                        <div *ngIf="lf['email'].errors['required']">Email is required</div>
+                        <div *ngIf="lf['email'].errors['email']">
+                            Please enter a valid email
+                        </div>
+                    </div>
+                    <button class="mt-3 w-100 btn btn-lg btn-primary mb-2">Submit</button>
+                    <div class="row" *ngIf="showMsg">
+                        <div class="col-xs-12">
+                            <p class="alert alert-success">
+                                <strong>Email verification link has been sent to your Email</strong> Please check your
+                                mail once!.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-end"><a [routerLink]="['/auth/Login']">Back to Login?</a></div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>

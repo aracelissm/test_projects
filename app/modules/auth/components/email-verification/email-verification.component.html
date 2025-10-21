@@ -1,0 +1,55 @@
+<main>
+    <section class="auth-section-bg">
+        <div class="d-flex justify-content-center" *ngIf="!successMsg">
+            <div class="d-flex justify-content-center" *ngIf="!successMsg">
+                <!-- <div class="spinner-border" role="status">
+                    <span class="sr-only" id="loading"></span>
+                </div> -->
+            </div>
+        </div>
+        <div *ngIf="successMsg">
+            <div class="container">
+                <div class="form-auth">
+                    <img class="mb-2 logosvg" src="assets/images/IPSlogo-login.svg" alt="">
+                    <p>Viper Management Solutions ®</p>
+                    <h2 class="h3 mb-3 fw-normal">Email Verification Success</h2>
+                    <div class="form-floating  mb-3">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Email has been verified. You can now login to the
+                                Application</strong>
+                        </div>
+                    </div>
+                    <div class="text-end"><a [routerLink]="['/auth/Login']">Back to Login?</a></div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="successMsg">
+            <div class="container">
+                <div class="form-auth">
+                    <img class="mb-2 logosvg" src="assets/images/IPSlogo-login.svg" alt="">
+                    <p>Viper Management Solutions ®</p>
+                    <h2 class="h3 mb-3 fw-normal">Email Verification Failed</h2>
+                    <div class="form-floating  mb-3">
+                        <div class="alert alert-failure" role="alert"> <strong> Invalid Email Verification Link
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="text-end"><a [routerLink]="['/auth/resend-verification']">Resend Email
+                            verification link</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="backToLogin">
+            <div class="container">
+                <div class="form-auth">
+                    <img class="mb-2 logosvg" src="assets/images/IPSlogo-login.svg" alt="">
+                    <p>Viper Management Solutions ®</p>
+                    <h2 class="h3 mb-3 fw-normal">Email is already Verified. You can now Login</h2>
+                    <div class="text-end"><a [routerLink]="['/auth/Login']">Back to Login?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

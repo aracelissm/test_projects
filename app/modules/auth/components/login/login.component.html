@@ -1,0 +1,46 @@
+<main>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <section class="auth-section-bg">
+        <div class="container">
+            <div class="form-auth">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmitLoginForm()">
+                    <img class="mb-2 logosvg" src="assets/images/IPSlogo-login.svg" alt="">
+                    <p>Viper Management Solutions ®</p>
+                    <h2 class="h3 eye-mb fw-normal">Login</h2>
+                    <div class="form-floating eye-mb">
+                        <input type="email" formControlName="email" class="form-control login-tf-border-height"
+                            placeholder="Enter" [ngClass]="{ 'is-invalid': submitted && lf['email'].errors }">
+                        <label for="floatingInput">Email / User ID </label>
+                    </div>
+                    <div *ngIf="submitted && lf['email'].errors" class="invalid-feedback mt-n15px">
+                        <div *ngIf="lf['email'].errors['required']">Email is required</div>
+                        <div *ngIf="lf['email'].errors['email']">
+                            Please enter a valid email
+                        </div>
+                    </div>
+                    <div class="form-floating">
+                        <input [type]="password" formControlName="password"
+                            class="form-control login-tf-border-height eye-mb1" placeholder="Password"
+                            [ngClass]="{ 'is-invalid': submitted && lf['password'].errors }">
+
+                        <span (click)="onClick()" class=" form-eye">
+                            <i class="fa fa-eye" aria-hidden="true" *ngIf="!show && ! lf['password'].errors"></i>
+                            <i class="fa fa-eye-slash" aria-hidden="true" *ngIf="show "></i>
+
+                        </span>
+                        <label for="floatingPassword">Password </label>
+                    </div>
+                    <div *ngIf="submitted && lf['password'].errors" class="invalid-feedback mt-n10px">
+                        <div *ngIf="lf['password'].errors['required']">Password is required</div>
+                    </div>
+                    <button type="submit" class="w-100 btn btn btn-lg btn-primary mb-2">Login</button>
+                    <div class="text-end"><a routerLink="/auth/forgot-password">Forgot Password?</a></div>
+                    <div class="text-end"><a [routerLink]="['/auth/resend-verification']">Resend account
+                            verification link</a>
+                    </div>
+                </form>
+                <a class="btn-link d-none" (click)="loginUserToFileSyncService()">Login User To FileSync Service</a>
+            </div>
+        </div>
+    </section>
+</main>

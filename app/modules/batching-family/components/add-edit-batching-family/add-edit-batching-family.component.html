@@ -1,0 +1,118 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
+    <div *ngIf="show">
+        <app-recent-activity></app-recent-activity>
+    </div>
+    <div class="row">
+        <h2 class="title-v1 mb-1">Batching Families</h2>
+    </div>
+    <div class="col-md-12 col-lg-12 col-xxl-12 p-1">
+        <form [formGroup]="batchingFamilyForm" (ngSubmit)="onSubmit()">
+            <div class="card">
+                <div *ngIf="isAddMode" class="card-header">
+                    Create New Batching Family
+                </div>
+                <div *ngIf="!isAddMode" class="card-header">
+                    Edit Batching Family {{recId}}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Batching Family
+                                    <span appMarkAsterisk [formGroup]="batchingFamilyForm" [controlName]="'name'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['name'].errors" title="Name is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="titleFC" class="form-control" maxlength="20"
+                                    [ngClass]="{'req-border': submitted && lf['name'].errors }" type="text"
+                                    formControlName="name" placeholder="Enter Batching Family">
+                                <div *ngIf="submitted && lf['name'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Description
+                                    <span appMarkAsterisk [formGroup]="batchingFamilyForm" [controlName]="'descr'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['descr'].errors" title="Description is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="descrFC" class="form-control" maxlength="20"
+                                    [ngClass]="{'req-border': submitted && lf['descr'].errors }" type="text"
+                                    formControlName="descr" placeholder="Enter Desription">
+                                <div *ngIf="submitted && lf['descr'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Batching Category
+                                    <span appMarkAsterisk [formGroup]="batchingFamilyForm"
+                                        [controlName]="'batchingCategoryId'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['batchingCategoryId'].errors"
+                                        title="Description is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <app-single-select placeholder="Select A Batching Category" bindLabel="batchingCategory"
+                                    [searchable]="true" typeToSearchText="Select A Batching Category"
+                                    [minTermLength]="minLengthTerm" [trackByFn]="batchingCategoryTrackByFn"
+                                    [getOptionLabelFn]="getBatchingCategoryOptionLabelFn"
+                                    [options$]="batchingCategoryOptions$"
+                                    [optionsLoading]="batchingCategoryOptionsLoading"
+                                    [optionsInput$]="batchingCategoryOptionsInput$"
+                                    (onSelect)="onSelectBatchingCategory($event)"
+                                    (onClear)="onClearBatchingCategory($event)" formControlName="batchingCategoryId">
+                                </app-single-select>
+                                <div *ngIf="submitted && lf['batchingCategoryId'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-3 col-xxl-1">
+                            <div class="mb-3">
+                                <div class="form-check-inline me-0">
+                                    <label class="form-check-label me-2">Is Active</label>
+                                    <dx-switch formControlName="isActive" [switchedOnText]="''" [switchedOffText]="''"
+                                        class="custom-switch form-control-switch"> </dx-switch>
+                                </div>
+                                <div *ngIf="submitted && lf['isActive'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Order in list
+                                    <span appMarkAsterisk [formGroup]="batchingFamilyForm" [controlName]="'sort'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['sort'].errors" title="Order in list is required.">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <dx-number-box #numberBox [showSpinButtons]="false" format="#0"
+                                    [ngClass]="{'req-border': submitted && lf['sort'].errors }"
+                                    formControlName="sort"></dx-number-box>
+                                <div *ngIf="submitted && lf['sort'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row mt-2">
+        <div class="text-end">
+            <button type="button" class="btn btn-outline-dark m-2 no-border-radius"
+                [routerLink]="['/batching-family/list-batching-family']">Cancel</button>
+            <button type="button" class="btn btn-primary m-2" (click)="onSubmit()">
+                <span *ngIf="isAddMode">Create</span>
+                <span *ngIf="!isAddMode">Update</span>
+            </button>
+        </div>
+    </div>
+</main>

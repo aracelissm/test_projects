@@ -1,0 +1,229 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2 mob-space-v2">
+    <div class="row">
+        <div *ngIf="show">
+            <app-recent-activity></app-recent-activity>
+        </div>
+        <h2 class="title-v1 mb-1">Accounting Period</h2>
+    </div>
+    <div class="col-md-12 col-lg-12 col-xxl-12 p-1">
+        <form [formGroup]="accountingPeriodForm" (ngSubmit)="onSubmit()">
+            <div class="card">
+                <div class="card-header">
+                    Accounting Period Info
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Accounting Year
+                                    <span appMarkAsterisk [formGroup]="accountingPeriodForm" [controlName]="'year'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['year'].errors && !lf['year'].errors?.['pattern']"
+                                        title="Accounting year is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                    <a *ngIf="lf['year'].errors?.['pattern']"
+                                        title="Accounting year can only be numbers and must be 4 digits long">
+                                        <img src=" assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="accountingYear" class="form-control"
+                                    [ngClass]="{'req-border': submitted && lf['year'].errors }" type="text"
+                                    formControlName="year" placeholder="Accounting Year"
+                                    (ngModelChange)="onAccountingPeriodYearChanged($event)">
+                                <div *ngIf="submitted && lf['year'].errors" class="form-error-tf"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Accounting Period
+                                    <span appMarkAsterisk [formGroup]="accountingPeriodForm"
+                                        [controlName]="'accountingPeriod'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['accountingPeriod'].errors && !lf['accountingPeriod'].errors?.['pattern']"
+                                        title="Accounting month is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                    <a *ngIf="lf['accountingPeriod'].errors?.['pattern']"
+                                        title="Accounting month can only be numbers and must be 1-2 digits long">
+                                        <img src=" assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <input id="accountingPeriod" class="form-control"
+                                    [ngClass]="{'req-border': submitted && lf['accountingPeriod'].errors }" type="text"
+                                    placeholder="Accounting Period" formControlName="accountingPeriod">
+                                <div *ngIf="submitted && lf['accountingPeriod'].errors" class="form-error-tf">
+                                    <div *ngIf="lf['accountingPeriod'].errors['pattern']"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Period Begin
+                                    <span appMarkAsterisk [formGroup]="accountingPeriodForm"
+                                        [controlName]="'startDate'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['startDate'].errors?.['required']"
+                                        title="Period Begin is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                    <a *ngIf="lf['startDate'].errors?.['dateComparison']"
+                                        title="Period End must be greater than Period Begin">
+                                        <img src=" assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <dx-date-box id="startDate" type="date"
+                                    [ngClass]="{'req-border': submitted && lf['startDate'].errors }"
+                                    placeholder="Period Begin" formControlName="startDate" [min]="minDate"
+                                    [openOnFieldClick]="true" [acceptCustomValue]="false" [showClearButton]="false"
+                                    (onValueChanged)="onChangeDate($event)" (blur)="compareDates()"
+                                    [max]="maxDate"></dx-date-box>
+                                <div *ngIf="submitted && lf['startDate'].errors" class="form-error-tf">
+                                    <div *ngIf="lf['startDate'].errors?.['dateComparison']"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-xxl-2">
+                            <div class="mb-3">
+                                <label class="form-label">Period End
+                                    <span appMarkAsterisk [formGroup]="accountingPeriodForm" [controlName]="'endDate'">
+                                    </span>
+                                    <a *ngIf="submitted && lf['endDate'].errors?.['required']"
+                                        title="Period End is required">
+                                        <img src="assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                    <a *ngIf="lf['endDate'].errors?.['dateComparison']"
+                                        title="Period End must be greater than Period Begin">
+                                        <img src=" assets/images/validation-info.svg" class="icon20px">
+                                    </a>
+                                </label>
+                                <dx-date-box id="endDate" type="date"
+                                    [ngClass]="{'req-border': submitted && lf['endDate'].errors }"
+                                    placeholder="Period End" formControlName="endDate" [min]="minDate"
+                                    [openOnFieldClick]="true" [acceptCustomValue]="false" [showClearButton]="false"
+                                    (onValueChanged)="onChangeDate($event)" (blur)="compareDates()"
+                                    [max]="maxDate"></dx-date-box>
+                                <div *ngIf="submitted && lf['endDate'].errors" class="form-error-tf">
+                                    <div *ngIf="lf['endDate'].errors?.['dateComparison']"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Begin - AccPeriodExtension Fields -->
+            <div class="card mt-3" *ngIf="!isAddMode">
+                <div class="card-header">
+                    Accounting Period Extension
+                    <span *ngIf="selectedPlantLocation">For {{ selectedPlantLocation.locationName }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th></th>
+                                    <th>Roof BdFt</th>
+                                    <th>Floor BdFt</th>
+                                    <th>Panel BdFt</th>
+                                </tr>
+                                <tr>
+                                    <th>Break Even</th>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['breakEvenRoofBdFt'].errors }"
+                                            [title]="submitted && lf['breakEvenRoofBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Break Even Roof BdFt" formControlName="breakEvenRoofBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('breakEvenRoofBdFt')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['breakEvenFloorBdFt'].errors }"
+                                            [title]="submitted && lf['breakEvenFloorBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Break Even Floor BdFt" formControlName="breakEvenFloorBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('breakEvenFloorBdFt')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['breakEvenPanelBdFt'].errors }"
+                                            [title]="submitted && lf['breakEvenPanelBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Break Even Panel BdFt" formControlName="breakEvenPanelBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('breakEvenPanelBdFt')">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Budget</th>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['budgetRoofBdFt'].errors }"
+                                            [title]="submitted && lf['budgetRoofBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Budget Roof BdFt" formControlName="budgetRoofBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('budgetRoofBdFt')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['budgetFloorBdFt'].errors }"
+                                            [title]="submitted && lf['budgetFloorBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Budget Floor BdFt" formControlName="budgetFloorBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('budgetFloorBdFt')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['budgetPanelBdFt'].errors }"
+                                            [title]="submitted && lf['budgetPanelBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Budget Panel BdFt" formControlName="budgetPanelBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('budgetPanelBdFt')">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Sales</th>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['salesRoofBdFt'].errors }"
+                                            [title]="submitted && lf['salesRoofBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Sales Roof BdFt" formControlName="salesRoofBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('salesRoofBdFt')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['salesFloorBdFt'].errors }"
+                                            [title]="submitted && lf['salesFloorBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Sales Floor BdFt" formControlName="salesFloorBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('salesFloorBdFt')">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control"
+                                            [ngClass]="{'req-border': submitted && lf['salesPanelBdFt'].errors }"
+                                            [title]="submitted && lf['salesPanelBdFt'].errors?.['pattern'] ? getPatternErrMsg() : ''"
+                                            placeholder="Sales Panel BdFt" formControlName="salesPanelBdFt"
+                                            mask="separator.2" thousandSeparator=","
+                                            (change)="onChangeAccPeriodExtensionField('salesPanelBdFt')">>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--End - AccPeriodExtension Fields-->
+        </form>
+    </div>
+    <div class="row mt-2">
+        <div class="text-end">
+            <button type="button" class="btn btn-outline-dark m-2 no-border-radius"
+                [routerLink]="['/accounting-period/list-accounting-period']">Cancel</button>
+            <button type="button" class="btn btn-primary m-2" (click)="onSubmit()">
+                <span *ngIf="isAddMode">Create</span>
+                <span *ngIf="!isAddMode">Update</span>
+            </button>
+        </div>
+    </div>
+</main>

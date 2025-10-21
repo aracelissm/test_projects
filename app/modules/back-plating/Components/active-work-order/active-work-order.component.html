@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="accordion">
+        <div class="accordion-item mt-2">
+            <h2 class="accordion-header" id="setdefault" data-bs-spy="scroll">
+                <button class="accordion-button accordion-title show" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#activeWorkOrder" aria-expanded="true" aria-controls="jobEng-section">
+                    Active Work Orders
+                </button>
+            </h2>
+            <div id="activeWorkOrder" class="accordion-collapse show" aria-labelledby="setdefault">
+                <div class="accordion-body p-3">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <div class="mb-2">
+                                <label class="form-label">Job Number / Activity
+                                </label>
+                                <p class="fw-bold">{{ activeWorkOrder?.jobNumber}} / {{ activeWorkOrder?.Mark}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <div class="mb-2">
+                                <label class="form-label">Schedule Date
+                                </label>
+                                <p class="fw-bold">{{ activeWorkOrder?.scheduleDate}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <div class="mb-2">
+                                <label class="form-label">Customer Number
+                                </label>
+                                <p class="fw-bold">{{ activeWorkOrder?.customerNumber}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <div class="mb-2">
+                                <label class="form-label">Project
+                                </label>
+                                <p class="fw-bold">{{ activeWorkOrder?.project}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-xs-12">
+                            <div class="mb-2">
+                                <label class="form-label">Job Ref
+                                </label>
+                                <p class="fw-bold">{{ activeWorkOrder?.jobRef}}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <!-- <div class="shift-icons">
+        <div class="mb-2 mt-1">
+            <button class="btn border shipstion-icon" *ngIf="activeWorkOrder?.woStatus === 'L'"
+                (click)="openInMaps($event)">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="shift-icons">
+        <div class="mb-2 mt-1">
+            <button class="btn border shipstion-icon" *ngIf="activeWorkOrder?.woStatus === 'L'"
+                (click)="displayCamera()">
+                <i class="fa fa-camera" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="shift-icons">
+        <div class="mb-2 mt-1">
+            <button class="btn border shipstion-icon" *ngIf="activeWorkOrder?.woStatus === 'L'"
+                (click)="ShowUploadPopup()">
+                <i class="fa fa-upload" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div> -->
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-xxl-6">
+                            <ng-container
+                                *ngIf="activeWorkOrder?.woStatus === 'S'|| activeWorkOrder?.woStatus === 'R'; else stopBlock">
+                                <button class="btn btn-primary form-control mb-2" (click)="start()">
+                                    Start
+                                </button>
+                            </ng-container>
+                            <ng-template #stopBlock>
+                                <button class="btn btn-primary form-control mb-2" (click)="stop()">
+                                    Stop
+                                </button>
+                            </ng-template>
+
+
+
+                        </div>
+                        <!-- <div class="col-md-6 col-xxl-6" *ngIf="isDefaultDriver || empSelected !== undefined">
+        <button class="btn btn-secondary form-control mb-2" (click)="ShowInstructions()">Instruction
+        </button>
+    </div> -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

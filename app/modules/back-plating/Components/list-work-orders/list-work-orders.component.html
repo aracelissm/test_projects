@@ -1,0 +1,104 @@
+<div class="row">
+    <div class="accordion">
+        <div class="accordion-item mt-2">
+            <h2 class="accordion-header" id="setdefault" data-bs-spy="scroll">
+                <button class="accordion-button accordion-title show" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#delivery" aria-expanded="true" aria-controls="jobEng-section">
+                    Upcoming Work Orders
+                </button>
+            </h2>
+            <div id="delivery" class="accordion-collapse show" aria-labelledby="setdefault">
+                <div class="accordion-body p-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="demo-container datagrid-wrapper custom-datagrid-pager-exists">
+                                <dx-data-grid #dataGrid [height]="dataGridHeight" [dataSource]="dataSource"
+                                    noDataText="No Work Order Found" (onContentReady)="onContentReady($event)"
+                                    [showBorders]="true" (onRowClick)="onRowClick($event)"
+                                    (onRowPrepared)="rowPrepared($event)">
+                                    <dxo-selection mode="single" minWidth="150">
+                                    </dxo-selection>
+                                    <dxo-export [enabled]="true"></dxo-export>
+                                    <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true"
+                                        [mode]="columnChooserModes[1].key">
+                                        <dxo-position my="right top" at="right bottom"
+                                            of=".dx-datagrid-column-chooser-button"></dxo-position>
+                                    </dxo-column-chooser>
+                                    <dxo-state-storing [enabled]="true" type="custom">
+                                    </dxo-state-storing>
+                                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                                    <dxo-search-panel [visible]="true" placeholder="Search...">
+                                    </dxo-search-panel>
+                                    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+                                    <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState"
+                                        [customSave]="saveState">
+                                    </dxo-state-storing>
+                                    <dxo-toolbar>
+                                        <dxi-item name="exportButton"></dxi-item>
+                                        <dxi-item name="resetButton">
+                                            <dx-button [disabled]='isUndo' icon="undo" hint="Reset All" class="ms-1"
+                                                (click)="onGridClickCancel()">
+                                            </dx-button>
+                                        </dxi-item>
+                                        <dxi-item name="searchPanel"></dxi-item>
+                                    </dxo-toolbar>
+                                    <dxi-column caption="WOID" dataField="woid" [visible]="false" alignment="center"
+                                        [allowSorting]="true" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                                        [allowReordering]="true" selectedFilterOperation="startswith"
+                                        [editorOptions]="editorOptions"></dxi-column>
+
+                                    <dxi-column caption="Status" dataField="esdStatus" [visible]="false"
+                                        alignment="center" [allowSorting]="true" [allowFiltering]="true"
+                                        [allowHeaderFiltering]="false" [allowReordering]="true"
+                                        selectedFilterOperation="startswith"
+                                        [editorOptions]="editorOptions"></dxi-column>
+
+                                    <dxi-column caption="Job" dataField="esdJobkey" alignment="left"
+                                        [allowSorting]="true" [allowFiltering]="true" [allowHeaderFiltering]="false"
+                                        [allowReordering]="true" selectedFilterOperation="startswith"
+                                        [editorOptions]="editorOptions">
+                                    </dxi-column>
+
+                                    <dxi-column caption="Mark" dataField="esdMark" [allowSorting]="true"
+                                        [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                                        selectedFilterOperation="startswith"
+                                        [editorOptions]="editorOptions"></dxi-column>
+
+                                    <dxi-column caption="Schedule Date" dataField="esdSchedDate" [allowSorting]="true"
+                                        [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                                        selectedFilterOperation="startswith" [editorOptions]="editorOptions"
+                                        dataType="dateTime">
+                                    </dxi-column>
+
+
+                                    <dxi-column caption="Customer Key" dataField="jobCustomerKey" [allowSorting]="true"
+                                        [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                                        selectedFilterOperation="startswith"
+                                        [editorOptions]="editorOptions"></dxi-column>
+
+                                    <dxi-column caption="Project" dataField="project" [allowSorting]="true"
+                                        [allowFiltering]="true" [allowHeaderFiltering]="false" [allowReordering]="true"
+                                        selectedFilterOperation="startswith"
+                                        [editorOptions]="editorOptions"></dxi-column>
+
+                                    <dxo-scrolling mode="virtual" [renderAsync]="false"> </dxo-scrolling>
+                                    <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+                                    <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items">
+                                    </dxo-pager>
+                                </dx-data-grid>
+                                <div class="custom-datagrid-pager-wrapper" *ngIf="gridCount">
+                                    <app-single-select placeholder="Select Page Size" [clearable]="false"
+                                        [trackByFn]="pageSizeTrackByFn" [getOptionLabelFn]="getPageSizeOptionLabelFn"
+                                        [options]="pageSizeOptions" (onSelect)="onSelectPageSize()"
+                                        [(ngModel)]="selectedPageSize">
+                                    </app-single-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

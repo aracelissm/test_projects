@@ -1,0 +1,68 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2 mob-space-v2">
+    <app-recent-activity></app-recent-activity>
+    <div>
+        <h2 class="title-v1 mb-1">Accounting Period Management</h2>
+    </div>
+    <button type="button" class="btn btn-outline-dark cu-btnlist" *hasPermission="'CRACCPERIOD'"
+        (click)="onClickCreateAccountingPeriod()">
+        <i class="fas fa-plus"></i>&nbsp; <span class="ml-3">Accounting Period</span></button>
+    <div class="demo-container  datagrid-wrapper custom-datagrid-pager-exists" *hasPermission="'REACCPERIOD'">
+        <dx-data-grid [height]="dataGridHeight" [dataSource]="dataSource" keyExpr="recId"
+            noDataText="No Accounting Periods Found" [remoteOperations]="false" [renderAsync]="false"
+            (onExporting)="onExporting($event)" (onContentReady)="onContentReady($event)">
+            <dxo-export [enabled]="true"></dxo-export>
+        <dxo-column-chooser #columnChooser [allowSearch]="true" [enabled]="true" [mode]="columnChooserModes[1].key">
+            <dxo-position my="right top" at="right bottom" of=".dx-datagrid-column-chooser-button"></dxo-position>
+        </dxo-column-chooser>
+            <dxo-state-storing [enabled]="true" type="custom" [customLoad]="loadState" [customSave]="saveState">
+            </dxo-state-storing>
+            <dxo-toolbar>
+                <dxi-item name="columnChooserButton"></dxi-item>
+        <dxi-item name="exportButton"></dxi-item>
+                <dxi-item name="resetButton">
+                    <dx-button [disabled]="isUndo" icon="undo" hint="Reset All" class="ms-1" (click)="onClickCancel()">
+                    </dx-button>
+                </dxi-item>
+                <dxi-item name="searchPanel"></dxi-item>
+            </dxo-toolbar>
+
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-search-panel [visible]="true" [width]="240" [text]="searchResult" placeholder="Search...">
+            </dxo-search-panel>
+            <dxi-column caption="Accounting Year" dataField="year" alignment="left" [allowHeaderFiltering]="false"
+                [allowReordering]="true" [editorOptions]="editorOptions">
+            </dxi-column>
+            <dxi-column caption="Accounting Period" dataField="periodNumber" alignment="left"
+                [allowHeaderFiltering]="false" [allowReordering]="true" [editorOptions]="editorOptions">
+            </dxi-column>
+            <dxi-column caption="Period Begin" dataField="periodBegin" alignment="left" [allowHeaderFiltering]="false"
+                [allowReordering]="true" [editorOptions]="editorOptions" dataType="date">
+            </dxi-column>
+            <dxi-column caption="Period End" dataField="periodEnd" alignment="left" [allowHeaderFiltering]="false"
+                [allowReordering]="true" [editorOptions]="editorOptions" dataType="date">
+            </dxi-column>
+
+            <dxi-column caption="Actions" [allowHiding]="false" [allowFixing]="true" [fixed]="true" fixedPosition="right"
+                type="buttons">
+                <dxi-button hint="Edit" icon="edit" [onClick]="onClickEditAccountingPeriod"
+                    *hasPermission="'UPACCPERIOD'">
+                </dxi-button>
+                <dxi-button hint="Delete" icon="trash" [onClick]="onClickDeleteAccountingPeriod"
+                    *hasPermission="'DEACCPERIOD'">
+                </dxi-button>
+            </dxi-column>
+
+            <dxo-scrolling mode="virtual" [renderAsync]="false">
+            </dxo-scrolling>
+            <dxo-paging [pageSize]="150" [pageIndex]="0"></dxo-paging>
+            <dxo-pager [visible]="true" [showInfo]="true" infoText="Total - {2} items"> </dxo-pager>
+        </dx-data-grid>
+        <div class="custom-datagrid-pager-wrapper" *ngIf="gridCount">
+            <app-single-select placeholder="Select Page Size" [clearable]="false" [trackByFn]="pageSizeTrackByFn"
+                [getOptionLabelFn]="getPageSizeOptionLabelFn" [options]="pageSizeOptions"
+                (onSelect)="onSelectPageSize()" [(ngModel)]="selectedPageSize">
+            </app-single-select>
+        </div>
+    </div>
+</main>
