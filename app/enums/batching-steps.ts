@@ -1,0 +1,5 @@
+export enum BatchingSteps {
+    IMPORTJOB = 'IMPORTJOB',
+    BATCHMARK = 'BATCHMARK',
+    SHIPPINGBUNDLE = 'SHIPPINGBUNDLE'
+}
