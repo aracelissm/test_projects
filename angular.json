@@ -1,0 +1,310 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "a1truss-ui-angular": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/a1truss-ui-angular",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/web.config"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/devextreme/dist/css/dx.common.css",
+              "node_modules/devextreme/dist/css/dx.light.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@ng-select/ng-select/themes/default.theme.css",              
+              "node_modules/ngx-toastr/toastr.css",
+              "src/assets/fontawesome/v5.15.4/css/all.min.css",
+              "src/styles.scss",
+              "src/assets/styles/custom_styles_1.scss",
+              "src/assets/styles/custom_styles_2.scss",
+              "src/assets/styles/custom_styles_3.scss",
+              "src/assets/styles/custom_styles_4.scss"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],            
+            "allowedCommonJsDependencies": [
+              "exceljs",
+              "moment"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "8mb",
+                  "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "qa": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "8mb",
+                  "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "qa2": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "8mb",
+                  "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa2.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "dev": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "8mb",
+                  "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "devdwp": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "8mb",
+                  "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.devdwp.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "devips": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "8mb",
+                  "maximumError": "16mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.devips.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "a1truss-ui-angular:build:production"
+            },
+            "qa": {
+              "buildTarget": "a1truss-ui-angular:build:qa"
+            },
+            "qa2": {
+              "buildTarget": "a1truss-ui-angular:build:qa2"
+            },
+            "dev": {
+              "buildTarget": "a1truss-ui-angular:build:dev"
+            },
+            "devdwp": {
+              "buildTarget": "a1truss-ui-angular:build:devdwp"
+            },
+            "devips": {
+              "buildTarget": "a1truss-ui-angular:build:devips"
+            },
+            "development": {
+              "buildTarget": "a1truss-ui-angular:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "a1truss-ui-angular:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist-server",
+            "main": "src/main.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "dev": {
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true
+            },
+            "production": {
+              "outputHashing": "all"
+            },
+            "qa2": {
+              "outputHashing": "all"
+            },
+            "qa": {
+              "outputHashing": "all"
+            },
+            "devdwp":{
+                "outputHashing": "all"
+            },
+            "devips": {
+              "outputHashing": "all"
+              }
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
+    }
+  }
+}

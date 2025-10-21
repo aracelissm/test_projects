@@ -1,0 +1,7 @@
+<app-top-navigationmenu *ngIf="sidTopDisabled" (sidnav)="sidnavstatus=$event;"></app-top-navigationmenu>
+<app-side-navigation *ngIf="sidTopDisabled" [sidnavstatus]="sidnavstatus"
+    [ngClass]="{'sidebarMenu':sidnavstatus}"></app-side-navigation>
+<div [ngClass]="{'sidebarMenus':sidnavstatus}">
+    <router-outlet></router-outlet>
+</div>
+<app-footer *ngIf="sidTopDisabled"></app-footer>
